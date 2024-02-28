@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('detalle_turnos', function (Blueprint $table) {
             $table->id();
+            $table->integer('cabecera_id');
+            $table->integer('numero_dia');
+            $table->string('estado');
             $table->timestamps();
         });
     }

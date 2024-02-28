@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('cabeceras', function (Blueprint $table) {
             $table->id();
+            $table->string('horario');
+            $table->integer('cantidad_horas');
+            $table->integer('zona_id');
+            $table->integer('persona_id');
+            $table->integer('cargo_id');
+            $table->string('estado');
             $table->timestamps();
         });
     }

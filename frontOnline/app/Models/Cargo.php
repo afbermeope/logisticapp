@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Cargo extends Model
 {
     use HasFactory;
+    
+    protected $fillable = ['nombre', 'estado'];
+
+    public function tarifas()
+    {
+        return $this->hasMany(Tarifa::class);
+    }
+
+    public function cabeceras()
+    {
+        return $this->hasMany(Cabecera::class);
+    }
+    
 }

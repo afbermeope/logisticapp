@@ -15,9 +15,16 @@ return new class extends Migration
     {
         Schema::create('personas', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->string('cedula');
+            $table->string('telefono')->nullable();
+            $table->string('correo')->nullable();
+            $table->string('direccion')->nullable();
+            $table->string('estado');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('tarifas', function (Blueprint $table) {
             $table->id();
+            $table->integer('hora');
+            $table->double('valor');
+            $table->integer('cargo_id');
+            $table->string('estado');
             $table->timestamps();
         });
     }

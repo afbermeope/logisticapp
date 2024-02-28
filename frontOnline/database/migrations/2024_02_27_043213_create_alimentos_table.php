@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('alimentos', function (Blueprint $table) {
             $table->id();
+            $table->string('descripcion');
+            $table->integer('movimiento_id');
+            $table->string('estado');
             $table->timestamps();
         });
     }

@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('movimientos', function (Blueprint $table) {
             $table->id();
+            $table->string('descripcion');
+            $table->integer('detalle_turno_id');
+            $table->string('estado');
             $table->timestamps();
         });
     }
