@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetalleTurno;
+use App\Models\Persona;
 use Illuminate\Http\Request;
 
 class DetalleTurnoController extends Controller
@@ -36,6 +37,14 @@ class DetalleTurnoController extends Controller
     public function store(Request $request)
     {
         //
+         //
+         $id_usuario = $request->input("id_usuario");
+         $persona = Persona::where('cedula', $id_usuario)->first();
+         if($persona){
+             return "bienvenido ".$persona->nombre;
+         }else{
+             return "no encontrado";
+         }
     }
 
     /**

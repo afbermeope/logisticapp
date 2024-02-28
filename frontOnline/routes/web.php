@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\EventoController;
+use App\Http\Controllers\DetalleTurnoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +21,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Route::get('/prueba', function () {
+    return view('prueba');
+});
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes();
+Route::resource('detalleTurno', DetalleTurnoController::class);
+
+Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::resource('persona', PersonaController::class);
+    Route::resource('evento', EventoController::class);
+    Route::resource('cargo', CargoController::class);
+
+    // Route::get('/activity/program/{id}', [ActivityController::class, 'programView']);
+    // Route::post('/home/showServiceOrder/', [HomeController::class, 'showServiceOrder']);
+    
+});
+
