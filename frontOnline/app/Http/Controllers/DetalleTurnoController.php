@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DetalleTurno;
 use App\Models\Persona;
+use App\Models\Movimiento;
 use Illuminate\Http\Request;
 
 class DetalleTurnoController extends Controller
@@ -38,9 +39,33 @@ class DetalleTurnoController extends Controller
     {
         //
          //
-         $id_usuario = $request->input("id_usuario");
-         $persona = Persona::where('cedula', $id_usuario)->first();
-         if($persona){
+        $cedula = $request->input("cedula");
+        $elementos = $request->input("elementos");
+        $alimento = $request->input("alimento");
+        $persona = Persona::where('cedula', $cedula)->first();
+        
+        // dd($persona);
+        //TODO el usuario va ligado a un detallecabecera
+        if($persona){
+
+            //validar si existe un movimiento previo
+            $movimientoPrevio = Movimiento::where('descripcion', 'checkin')
+                ->where('estado', 'A')
+                ->first();
+            if($movimientoPrevio){
+                Movimiento::create([
+                    'descripcion' => 'checkout',
+                    'detalle_turno_id' => 1,
+                    'estado' => 'A'
+                ]);
+    
+            }else{
+                Movimiento::create([
+                    'descripcion' => 'checkin',
+                    'detalle_turno_id' => 1,
+                    'estado' => 'A'
+                ]);
+            }
              return "bienvenido ".$persona->nombre;
          }else{
              return "no encontrado";

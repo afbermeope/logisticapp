@@ -9,14 +9,14 @@
 <body>
     <form action="/detalleTurno/" method="post" >
         @csrf
-        <input type="text" name="id_usuario" id="id_usuario">
+        <input type="text" name="cedula" id="cedula">
         <input type="submit" value="Subir">
     </form>
 </body>
 <script>
         window.onload = function() {
             // Tu código aquí se ejecutará cuando la página haya cargado completamente.
-            document.getElementById("id_usuario").focus();
+            document.getElementById("cedula").focus();
 
             // Puedes agregar cualquier lógica o funciones que desees ejecutar después de la carga completa.
         };
