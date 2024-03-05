@@ -84,7 +84,7 @@ class EventoController extends Controller
         ]);
         $evento->zonas()->save($zona);
         $evento->load('zonas');    
-        
+
         return view('eventos.zonas')->with([
             'evento'  => $evento
         ]);
@@ -107,9 +107,15 @@ class EventoController extends Controller
      * @param  \App\Models\Evento  $evento
      * @return \Illuminate\Http\Response
      */
-    public function edit(Evento $evento)
+    public function edit($id)
     {
-        //
+        $evento = Evento::find($id);
+
+        return view('eventos.update')->with([
+            'message'  => "",
+            'error'  => "",
+            'evento'  => $evento,
+        ]);
     }
 
     /**
@@ -119,9 +125,31 @@ class EventoController extends Controller
      * @param  \App\Models\Evento  $evento
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Evento $evento)
+    public function update(Request $request,  $id)
     {
-        //
+
+        $evento = Evento::find($id);
+
+        $fechaInicio = $request->input('fecha_inicio');
+        $fechaFin = $request->input('fecha_fin');
+        $fechaInicioCarbon = Carbon::parse($fechaInicio);
+        $fechaFinCanbon = Carbon::parse($fechaFin);
+        $diferenciaEnDias = $fechaInicioCarbon->diffInDays($fechaFinCanbon)+1;
+        
+        $evento->nombre = $request->input('nombre_evento');
+        $evento->fecha_inicio = $fechaInicio;
+        $evento->fecha_fin = $fechaFin;
+        $evento->dias = $diferenciaEnDias;
+        $evento->save();
+        
+        $eventos = Evento::all();
+
+        return view('eventos.index')->with([
+            'eventos'  => $eventos,
+            'message' => 'Evento editado correctamente',
+            'error' => '',
+        ]);
+
     }
 
     /**
