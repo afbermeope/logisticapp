@@ -76,7 +76,6 @@ class EventoController extends Controller
     {
         $evento = Evento::find($request->input('evento_id'));
         
-        // dd($evento);name="evento_id"
         $zona =  Zona::create([
             'evento_id' => $evento->id,
             'nombre' => $request->input('nombre'),
@@ -84,10 +83,13 @@ class EventoController extends Controller
         ]);
 
         $evento->zonas->add($zona);
-
         $evento->save();
-        return "ok";
         
+        return view('eventos.zonas')->with([
+            'zonas'  => $evento->zonas,
+            'message' => '',
+            'error' => '',
+        ]);
     }
 
     /**

@@ -193,19 +193,19 @@
 
 <script>
     $(function () {
-      $("#theme-table").DataTable({
+      $("#zonas-table").DataTable({
         "responsive": false, "lengthChange": false, "autoWidth": true,
         "buttons": [
             {"extend": 'csvHtml5', 
             "exportOptions": {
-                "columns": [ 0,1,2, ':visible' ]
+                "columns": [ 0,1, ':visible' ]
             }}, 
             {"extend": 'excelHtml5', 
             "exportOptions": {
-                "columns": [ 0,1,2, ':visible' ]
+                "columns": [ 0,1, ':visible' ]
             }},{"extend": 'pdfHtml5', 
             "exportOptions": {
-                "columns": [ 0,1,2, ':visible' ]
+                "columns": [ 0,1, ':visible' ]
             }}, "colvis" ],
         "language": {
             "processing": "Procesando...",

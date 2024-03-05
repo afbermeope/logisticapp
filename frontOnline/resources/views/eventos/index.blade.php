@@ -76,10 +76,10 @@
                                 <tbody>
                                     @foreach ($eventos as $evento)
                                         <tr>
-                                            <td>{{ $user->nombre }}</td>
-                                            <td>{{ $user->fecha_inicio }}</td>
-                                            <td>{{ $user->fecha_fin }}</td>
-                                            <td>{{ $user->dias }}</td>
+                                            <td>{{ $evento->nombre }}</td>
+                                            <td>{{ $evento->fecha_inicio }}</td>
+                                            <td>{{ $evento->fecha_fin }}</td>
+                                            <td>{{ $evento->dias }}</td>
                                             <td>
                                                 <a href="/evento/{{$evento->id}}/edit" target="_blank">
                                                     <button class="btn btn-secondary" type="button">Editar</button>
