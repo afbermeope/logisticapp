@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>Insight | Dashboard</title>
+  <title>LogisticApp | Dashboard</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -132,7 +132,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="/movimiento" class="nav-link">
+              <a href="/detalleTurno" class="nav-link">
                 <i class="nav-icon fa fa-compress"></i>
                 <p>
                     Movimientos

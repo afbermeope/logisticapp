@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
+use App\Models\Zona;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class EventoController extends Controller
 {
@@ -15,6 +17,13 @@ class EventoController extends Controller
     public function index()
     {
         //
+        $eventos = Evento::all();
+
+        return view('eventos.index')->with([
+            'eventos'  => $eventos,
+            'message' => '',
+            'error' => '',
+        ]);
     }
 
     /**
@@ -26,7 +35,6 @@ class EventoController extends Controller
     {
         //
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -35,7 +43,49 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fechaInicio = $request->input('fecha_inicio');
+        $fechaFin = $request->input('fecha_fin');
+        $fechaInicioCarbon = Carbon::parse($fechaInicio);
+        $fechaFinCanbon = Carbon::parse($fechaFin);
+        $diferenciaEnDias = $fechaInicioCarbon->diffInDays($fechaFinCanbon)+1;
+
+        $evento = Evento::create(
+            [
+                'nombre' => $request->input('nombre'),
+                'fecha_inicio' => $fechaInicio,
+                'fecha_fin' => $fechaFin,
+                'dias' => $diferenciaEnDias,
+                'estado' => 'A'
+            ]
+        );
+
+        return redirect("/eventos/".$evento->id."/agregarZona")->with(['message' => 'Evento agregado correctamente, ahora ingresa las zonas']);
+    }
+    public function agregarZonaView($id)
+    {
+        $evento = Evento::find($id);
+
+        return view('eventos.agregarZona')->with([
+            'evento'  => $evento,
+            'message' => '',
+            'error' => '',
+        ]);
+    }
+
+    public function agregarZona(Request $request)
+    {
+        $evento = Evento::find($request->input('id'));
+        
+        $evento->zona = Zona::create([
+            'evento_id' => $evento->id,
+            'nombre' => $evento->nombre,
+            'estado' => "A"
+        ]);
+
+        $evento->save();
+
+        return "yay";
+        
     }
 
     /**

@@ -26,17 +26,19 @@ Route::get('/prueba', function () {
 });
 
 Auth::routes();
-Route::resource('detalleTurno', DetalleTurnoController::class);
+// Route::resource('detalleTurno', DetalleTurnoController::class);
 
 Route::group(['middleware' => 'auth'], function () {
 
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::resource('persona', PersonaController::class);
     Route::resource('evento', EventoController::class);
     Route::resource('cargo', CargoController::class);
+    Route::resource('persona', PersonaController::class);
+    Route::resource('detalleTurno', DetalleTurnoController::class);
 
-    // Route::get('/activity/program/{id}', [ActivityController::class, 'programView']);
-    // Route::post('/home/showServiceOrder/', [HomeController::class, 'showServiceOrder']);
+
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/eventos/{id}/agregarZona', [EventoController::class, 'agregarZonaView']);
     
+    Route::post('/eventos/agregarZona/', [DetalleTurnoController::class, 'agregarZona']);
 });
 
