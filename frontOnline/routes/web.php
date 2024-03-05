@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\DetalleTurnoController;
+use App\Http\Controllers\ZonaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,10 +32,10 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('evento', EventoController::class);
+    Route::resource('zona', ZonaController::class);
     Route::resource('cargo', CargoController::class);
     Route::resource('persona', PersonaController::class);
     Route::resource('detalleTurno', DetalleTurnoController::class);
-
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/eventos/{id}/agregarZona', [EventoController::class, 'agregarZonaView']);

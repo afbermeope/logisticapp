@@ -154,7 +154,7 @@
           let _token   = $('meta[name="csrf-token"]').attr('content');
           let evento_id = $("input[name=evento_id]").val();
           $.ajax({
-              url: "{{URL::to('/evento/')}}"+"/"+id,
+              url: "{{URL::to('/zona/')}}"+"/"+id,
               type: "POST",
               data: {
                   _method: 'delete',
