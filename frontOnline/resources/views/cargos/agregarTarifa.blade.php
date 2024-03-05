@@ -18,12 +18,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Evento {{$evento->nombre}}</h1>
+            <h1 class="m-0">cargo {{$cargo->nombre}}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-              <li class="breadcrumb-item active">Evento {{$evento->nombre}}</li>
+              <li class="breadcrumb-item active">Cargo {{$cargo->nombre}}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -39,18 +39,23 @@
                     <!-- general form elements -->
                     <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Agregar zonas al evento {{$evento->nombre}}</h3>
+                        <h3 class="card-title">Agregar tarifa al cargo {{$cargo->nombre}}</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form id="agregarZona">
+                    <form id="agregarTarifa">
                         @csrf
-                        <input name="evento_id" id="evento_id" type="hidden" value="{{$evento->id}}">
+                        <input name="tarifa_id" id="tarifa_id" type="hidden" value="{{$cargo->id}}">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre de la zona" required>
+                                <label for="nombre">Tarifa</label>
+                                <input type="number" min="1" step="any" class="form-control" id="valor" name="valor" placeholder="Ingrese  la tarifa" required>
                             </div>
+                            <div class="form-group">
+                                <label for="hora">Valor Hora</label>
+                                <input type="number" class="form-control" id="hora" name="hora" required>
+                            </div>
+                        </div>
                         </div>
                         <div class="card-footer">
                         <button type="submit" class="btn btn-secondary">Subir</button>
@@ -62,11 +67,11 @@
                     <!-- general form elements -->
                     <div class="card card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title">Zonas agregadas</h3>
+                            <h3 class="card-title">Tarifas agregadas</h3>
                         </div>
                         <div class="card-body">
                             <div id="result"  class="col-md-12">
-                                <table id="zonas-table" class="table table-bordered table-striped">
+                                <table id="tarifass-table" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
@@ -74,14 +79,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($evento->zonas as $zona)
+                                        {{-- @foreach ($cargo->tarifas as $tarifa)
                                             <tr>
-                                                <td>{{ $zona->nombre }}</td>
+                                                <td>{{ $tarifa->nombre }}</td>
                                                 <td>
-                                                    <button class="btn btn-danger" type="button" onClick="confirmDelete({{$zona->id}})">Eliminar</button>
+                                                    <button class="btn btn-danger" type="button" onClick="confirmDelete({{$tarifa->id}})">Eliminar</button>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @endforeach --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -122,23 +127,26 @@
 
 <script type="text/javascript">
     
-    $("#agregarZona").submit(function(event){
+    $("#agregarTarifa").submit(function(event){
         event.preventDefault();
       
-        let nombre = $("input[name=nombre]").val();
-        let evento_id = $("input[name=evento_id]").val();
+        let valor = $("input[name=valor]").val();
+        let hora = $("input[name=hora]").val();
+        let cargo_id = $("input[name=cargo_id]").val();
         let _token   = $('meta[name="csrf-token"]').attr('content');
   
         $.ajax({
-          url: "{{URL::to('/eventos/agregarZona/')}}",
+          url: "{{URL::to('/cargos/agregarTarifa/')}}",
           type:"POST",
           data:{
-            nombre:nombre,
-            evento_id:evento_id,
+            valor:valor,
+            hora:hora,
+            tarifa_id:tarifa_id,
             _token: _token
           },
           success:function(response){
             document.getElementById('nombre').value = "";
+            document.getElementById('hora').value = "";
             // console.log(response);
             if(response) {
               $("#result").html(response); 
@@ -152,14 +160,14 @@
   function confirmDelete(id){
       if (confirm("Estas seguro de eliminar") == true) {
           let _token   = $('meta[name="csrf-token"]').attr('content');
-          let evento_id = $("input[name=evento_id]").val();
+          let tarifa_id = $("input[name=tarifa_id]").val();
           $.ajax({
-              url: "{{URL::to('/evento/')}}"+"/"+id,
+              url: "{{URL::to('/tarifa/')}}"+"/"+id,
               type: "POST",
               data: {
                   _method: 'delete',
                   _token: _token,
-                  evento_id: {{$evento->id}},
+                  tarifa_id: {{$cargo->id}},
                   action: 'delete'
               },
               success:function(response){
@@ -193,7 +201,7 @@
 
 <script>
     $(function () {
-      $("#zonas-table").DataTable({
+      $("#tarifas-table").DataTable({
         "responsive": false, "lengthChange": false, "autoWidth": true,
         "buttons": [
             {"extend": 'csvHtml5', 
