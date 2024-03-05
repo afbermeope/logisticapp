@@ -16,4 +16,9 @@ class Tarifa extends Model
         return $this->belongsTo(Cargo::class);
     }
 
+    public function cabeceras()
+    {
+        return $this->hasMany(Cabecera::class);
+    }
+
 }

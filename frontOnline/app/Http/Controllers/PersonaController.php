@@ -14,7 +14,13 @@ class PersonaController extends Controller
      */
     public function index()
     {
-        //
+        $personas = Persona::all();
+
+        return view('personas.index')->with([
+            'personas'  => $personas,
+            'message'  => "",
+            'error'  => "",
+        ]);
     }
 
     /**
@@ -35,7 +41,28 @@ class PersonaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $nombre = $request->input('nombre');
+        $cedula = $request->input('cedula');
+        $telefono = $request->input('telefono');
+        $email = $request->input('email');
+
+        $persona = Persona::create(
+            [
+                'nombre' => $nombre,
+                'cedula' => $cedula,
+                'telefono' => $telefono,
+                'email' => $email,
+                'estado' => 'A'
+            ]
+        );
+
+        $personas = Persona::all();
+
+        return view('personas.index')->with([
+            'personas'  => $personas,
+            'message'  => "Persona agregada correctamente",
+            'error'  => "",
+        ]);
     }
 
     /**
@@ -55,9 +82,15 @@ class PersonaController extends Controller
      * @param  \App\Models\Persona  $persona
      * @return \Illuminate\Http\Response
      */
-    public function edit(Persona $persona)
+    public function edit($id)
     {
-        //
+        $persona = Persona::find($id);
+        
+        return view('personas.update')->with([
+            'message'  => "",
+            'error'  => "",
+            'persona'  => $persona,
+        ]);
     }
 
     /**
@@ -67,9 +100,31 @@ class PersonaController extends Controller
      * @param  \App\Models\Persona  $persona
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Persona $persona)
+
+    public function update(Request $request,  $id)
     {
-        //
+
+        $persona = Persona::find($id);
+
+        $nombre = $request->input('nombre');
+        $cedula = $request->input('cedula');
+        $telefono = $request->input('telefono');
+        $correo = $request->input('correo');
+
+        $persona->nombre = $nombre;
+        $persona->cedula = $cedula;
+        $persona->telefono = $telefono;
+        $persona->correo = $correo;
+        $persona->save();
+        
+        $personas = Persona::all();
+
+        return view('personas.index')->with([
+            'personas'  => $personas,
+            'message' => 'Persona editada correctamente',
+            'error' => '',
+        ]);
+
     }
 
     /**
