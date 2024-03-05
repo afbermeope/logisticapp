@@ -45,7 +45,7 @@
                     <!-- form start -->
                     <form id="agregarZona">
                         @csrf
-                        <input name="evento_id" type="hidden" value="{{$evento->evento_id}}">
+                        <input name="evento_id" id="evento_id" type="hidden" value="{{$evento->id}}">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="nombre">Nombre</label>
@@ -126,6 +126,7 @@
         event.preventDefault();
       
         let nombre = $("input[name=nombre]").val();
+        let evento_id = $("input[name=evento_id]").val();
         let _token   = $('meta[name="csrf-token"]').attr('content');
   
         $.ajax({
@@ -133,6 +134,7 @@
           type:"POST",
           data:{
             nombre:nombre,
+            evento_id:evento_id,
             _token: _token
           },
           success:function(response){

@@ -74,17 +74,19 @@ class EventoController extends Controller
 
     public function agregarZona(Request $request)
     {
-        $evento = Evento::find($request->input('id'));
+        $evento = Evento::find($request->input('evento_id'));
         
-        $evento->zona = Zona::create([
+        // dd($evento);name="evento_id"
+        $zona =  Zona::create([
             'evento_id' => $evento->id,
-            'nombre' => $evento->nombre,
+            'nombre' => $request->input('nombre'),
             'estado' => "A"
         ]);
 
-        $evento->save();
+        $evento->zonas->add($zona);
 
-        return "yay";
+        $evento->save();
+        return "ok";
         
     }
 

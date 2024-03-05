@@ -9,7 +9,7 @@ class Evento extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'fecha_inicio', 'fecha_fin', 'dias', 'estado'];
+    protected $fillable = ['id', 'nombre', 'fecha_inicio', 'fecha_fin', 'dias', 'estado'];
 
     public function zonas()
     {
