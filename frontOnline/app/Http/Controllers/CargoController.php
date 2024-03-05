@@ -81,16 +81,15 @@ class CargoController extends Controller
             'estado' => "A",
         ]);
 
-        $cargo->tarifas->add($tarifa);
-        $cargo->save();
-        
-        return view('cargos.tarifas')->with([
-            'hora'  => $cargo->hora,
-            'valor'  => $cargo->tarifa,
-            'cargo_id'  => $cargo->id,
-            'message' => '',
-            'error' => '',
-        ]);
+        $cargo->tarifas()->save($tarifa);
+        $cargo->load('tarifas');    
+
+        dd(
+            "ee"
+        );
+        // return view('cargos.tarifas')->with([
+        //     'cargo'  => $cargo
+        // ]);
     }
 
     /**

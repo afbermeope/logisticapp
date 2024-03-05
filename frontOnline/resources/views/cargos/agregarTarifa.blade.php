@@ -56,7 +56,7 @@
                                 <input type="number" class="form-control" id="hora" name="hora" required>
                             </div>
                         </div>
-                        </div>
+                
                         <div class="card-footer">
                         <button type="submit" class="btn btn-secondary">Subir</button>
                         </div>
@@ -129,7 +129,6 @@
     
     $("#agregarTarifa").submit(function(event){
         event.preventDefault();
-      
         let valor = $("input[name=valor]").val();
         let hora = $("input[name=hora]").val();
         let cargo_id = $("input[name=cargo_id]").val();
