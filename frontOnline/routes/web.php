@@ -8,6 +8,8 @@ use App\Http\Controllers\DetalleTurnoController;
 use App\Http\Controllers\CargoController;
 
 
+use App\Http\Controllers\ZonaController;
+use App\Http\Controllers\CabeceraController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,10 +36,11 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('evento', EventoController::class);
+    Route::resource('zona', ZonaController::class);
     Route::resource('cargo', CargoController::class);
     Route::resource('persona', PersonaController::class);
     Route::resource('detalleTurno', DetalleTurnoController::class);
-
+    Route::resource('cabecera', CabeceraController::class);
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/eventos/{id}/agregarZona', [EventoController::class, 'agregarZonaView']);

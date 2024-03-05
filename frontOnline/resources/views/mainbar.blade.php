@@ -123,14 +123,22 @@
                   </p>
                 </a>
               </li>
-            <li class="nav-item">
-              <a href="/persona" class="nav-link">
-                <i class="nav-icon fas fa-address-book"></i>
-                <p>
-                    Personas
-                </p>
-              </a>
-            </li>
+              <li class="nav-item">
+                <a href="/persona" class="nav-link">
+                  <i class="nav-icon fas fa-address-book"></i>
+                  <p>
+                      Personas
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/cabecera" class="nav-link">
+                  <i class="nav-icon fas fa-address-book"></i>
+                  <p>
+                      Personal/Evento
+                  </p>
+                </a>
+              </li>
             <li class="nav-item">
               <a href="/detalleTurno" class="nav-link">
                 <i class="nav-icon fa fa-compress"></i>

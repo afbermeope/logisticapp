@@ -1,4 +1,5 @@
 
+
 @include('mainbar')
 <style>
     .select2-container .select2-selection--single {
@@ -18,7 +19,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Evento {{$evento->nombre}}</h1>
+            <h1 class="m-0">Evento {{$evento->nobmre}}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -35,6 +36,37 @@
         <div class="container-fluid">
         <!-- Main row -->
             <div class="row">
+                <div class="col-md-4">
+                    <!-- general form elements -->
+                    <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">Agrega a un evento</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->                
+                    <form action="{{ route('evento.update',$evento->id) }}" method="POST" role="form">
+                        @csrf
+                        <input name="_method" type="hidden" value="PATCH">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" class="form-control" id="nombre_evento" name="nombre_evento" placeholder="Ingrese el nombre" required value="{{$evento->nombre}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha_inicio">Fecha inicio</label>
+                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required value="{{ \Carbon\Carbon::parse($evento->fecha_inicio)->format('Y-m-d') }}">                            </div>
+                            <div class="form-group">
+                                <label for="fecha_fin">Fecha fin</label>
+                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required value="{{ \Carbon\Carbon::parse($evento->fecha_fin)->format('Y-m-d') }}">
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                        <button type="submit" class="btn btn-secondary">Subir</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
                 <div class="col-md-4">
                     <!-- general form elements -->
                     <div class="card card-secondary">

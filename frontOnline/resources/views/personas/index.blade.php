@@ -7,12 +7,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Eventos</h1>
+            <h1 class="m-0">Personas</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-              <li class="breadcrumb-item active">Eventos</li>
+              <li class="breadcrumb-item active">Personas</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -29,11 +29,11 @@
                     <!-- general form elements -->
                     <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Agrega a un evento</h3>
+                        <h3 class="card-title">Agrega a una persona</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->                
-                    <form action="/evento" method="POST">
+                    <form action="/persona" method="POST">
                         @csrf
                         <div class="card-body">
                             <div class="form-group">
@@ -41,12 +41,16 @@
                                 <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre" required>
                             </div>
                             <div class="form-group">
-                                <label for="fecha_inicio">Fecha inicio</label>
-                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                                <label for="cedula">Cédula</label>
+                                <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Ingrese la cédula" required>
                             </div>
                             <div class="form-group">
-                                <label for="fecha_fin">Fecha fin</label>
-                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
+                                <label for="telefono">Teléfono</label>
+                                <input type="number" class="form-control" id="telefono" name="telefono" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="correo">Email</label>
+                                <input type="email" class="form-control" id="correo" name="correo">
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -60,28 +64,28 @@
                 <div class="col-md-8">
                     <div class="card card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title">Lista de usuarios</h3>
+                            <h3 class="card-title">Lista de personas</h3>
                         </div>
                         <div class="card-body">
-                            <table id="user-table" class="table table-bordered table-striped">
+                            <table id="persona-table" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Fecha inicio</th>
-                                        <th>Fecha fin</th>
-                                        <th>Días del evento</th>
+                                        <th>Cédula</th>
+                                        <th>Teléfono</th>
+                                        <th>Email</th>
                                         <th>Editar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($eventos as $evento)
+                                    @foreach ($personas as $persona)
                                         <tr>
-                                            <td>{{ $evento->nombre }}</td>
-                                            <td>{{ $evento->fecha_inicio }}</td>
-                                            <td>{{ $evento->fecha_fin }}</td>
-                                            <td>{{ $evento->dias }}</td>
+                                            <td>{{ $persona->nombre }}</td>
+                                            <td>{{ $persona->cedula }}</td>
+                                            <td>{{ $persona->telefono }}</td>
+                                            <td>{{ $persona->correo }}</td>
                                             <td>
-                                                <a href="/evento/{{$evento->id}}/edit" target="_blank">
+                                                <a href="/persona/{{$persona->id}}/edit" target="_blank">
                                                     <button class="btn btn-secondary" type="button">Editar</button>
                                                 </a>
                                             </td>
@@ -117,19 +121,19 @@
 
 <script>
     $(function () {
-      $("#user-table").DataTable({
+      $("#persona-table").DataTable({
         "responsive": true, "lengthChange": false, "autoWidth": false,
         "buttons": [
             {"extend": 'csvHtml5', 
             "exportOptions": {
-                "columns": [ 0,1,2, ':visible' ]
+                "columns": [ 0,1,2,3, ':visible' ]
             }}, 
             {"extend": 'excelHtml5', 
             "exportOptions": {
-                "columns": [ 0,1,2, ':visible' ]
+                "columns": [ 0,1,2,3, ':visible' ]
             }},{"extend": 'pdfHtml5', 
             "exportOptions": {
-                "columns": [ 0,1,2, ':visible' ]
+                "columns": [ 0,1,2,3, ':visible' ]
             }}, "colvis" ],
         "language": {
             "processing": "Procesando...",

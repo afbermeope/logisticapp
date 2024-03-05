@@ -9,7 +9,7 @@ class Cabecera extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['horario', 'zona_id', 'persona_id', 'cantidad_horas', 'cargo_id', 'estado'];
+    protected $fillable = ['horario', 'zona_id', 'persona_id', 'cantidad_horas', 'tarifa_id', 'estado'];
 
     public function zona()
     {
@@ -21,9 +21,9 @@ class Cabecera extends Model
         return $this->belongsTo(Persona::class);
     }
 
-    public function cargo()
+    public function tarifa()
     {
-        return $this->belongsTo(Cargo::class);
+        return $this->belongsTo(Tarifa::class);
     }
 
     public function detalleTurnos()

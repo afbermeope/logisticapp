@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Zona;
+use App\Models\Evento;
+
 use Illuminate\Http\Request;
 
 class ZonaController extends Controller
@@ -78,8 +80,16 @@ class ZonaController extends Controller
      * @param  \App\Models\Zona  $zona
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Zona $zona)
+    public function destroy(Request $request, $id)
     {
-        //
+        $evento_id = $request->get("evento_id");  
+        $zona = Zona::find($id);
+        $zona->delete();
+        $evento = Evento::find($evento_id);
+        
+        return view('eventos.zonas')->with([
+            'evento'  => $evento
+        ]);
+      
     }
 }

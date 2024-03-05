@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('cantidad_horas');
             $table->integer('zona_id');
             $table->integer('persona_id');
-            $table->integer('cargo_id');
+            $table->integer('tarifa_id');
             $table->string('estado');
             $table->timestamps();
         });

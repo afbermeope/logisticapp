@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cabecera;
+use App\Models\Persona;
 use Illuminate\Http\Request;
 
 class CabeceraController extends Controller
@@ -14,7 +15,15 @@ class CabeceraController extends Controller
      */
     public function index()
     {
-        //
+        $eventos = Evento::where('estado','A');
+        $personas = Persona::where('estado','A');
+        $cargos = Cargo::where('estado','A');
+        $eventos = Evento::where('estado','A');
+
+        return view('cabeceras.index')->with([
+            'message'  => "",
+            'error'  => "",
+        ]);
     }
 
     /**
