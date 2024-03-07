@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\EventoController;
+use App\Http\Controllers\CargoController;
 use App\Http\Controllers\DetalleTurnoController;
 use App\Http\Controllers\ZonaController;
+use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\CabeceraController;
 
 /*
@@ -30,10 +32,11 @@ Route::get('/prueba', function () {
 Auth::routes();
 // Route::resource('detalleTurno', DetalleTurnoController::class);
 
-Route::group(['middleware' => 'auth'], function () {
+// Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('evento', EventoController::class);
     Route::resource('zona', ZonaController::class);
+    Route::resource('tarifa', TarifaController::class);
     Route::resource('cargo', CargoController::class);
     Route::resource('persona', PersonaController::class);
     Route::resource('detalleTurno', DetalleTurnoController::class);
@@ -41,7 +44,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/eventos/{id}/agregarZona', [EventoController::class, 'agregarZonaView']);
+    Route::get('/cargos/{id}/agregarTarifa', [CargoController::class, 'agregarTarifaView']);
     
     Route::post('/eventos/agregarZona/', [EventoController::class, 'agregarZona']);
-});
+    Route::post('/cargos/agregarTarifa/', [CargoController::class, 'agregarTarifa']);
+// });
 

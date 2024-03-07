@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cargo;
+use App\Models\Tarifa;
 use Illuminate\Http\Request;
 
 class CargoController extends Controller
@@ -15,6 +16,13 @@ class CargoController extends Controller
     public function index()
     {
         //
+        $cargos = Cargo::all();
+
+        return view('cargos.index')->with([
+            'cargos'  => $cargos,
+            'message' => '',
+            'error' => '',
+        ]);
     }
 
     /**
@@ -36,6 +44,45 @@ class CargoController extends Controller
     public function store(Request $request)
     {
         //
+        $nombre = $request->input('nombre');
+
+        $cargo = Cargo::create(
+            [
+                'nombre' => $request->input('nombre'),
+                'estado' => 'A'
+            ]
+        );
+
+        return redirect("/cargos/".$cargo->id."/agregarTarifa")->with(['message' => 'Cargo agregado correctamente, ahora ingresa las tarifas']);
+    }
+
+    public function agregarTarifaView($id)
+    {
+        $cargo = Cargo::find($id);
+
+        return view('cargos.agregarTarifa')->with([
+            'cargo'  => $cargo,
+            'message' => '',
+            'error' => '',
+        ]);
+    }
+
+    public function agregarTarifa(Request $request)
+    {
+        $cargo = Cargo::find($request->input('cargo_id'));
+        
+        $tarifa = Tarifa::create([
+            'cargo_id' => $cargo->id,
+            'valor' => $request->input('valor'),
+            'hora' => $request->input('hora'),
+            'estado' => "A"
+        ]);
+        $cargo->tarifas()->save($tarifa);
+        $cargo->load('tarifas');    
+
+        return view('cargos.tarifas')->with([
+            'cargo'  => $cargo
+        ]);
     }
 
     /**
@@ -55,11 +102,16 @@ class CargoController extends Controller
      * @param  \App\Models\Cargo  $cargo
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cargo $cargo)
+    public function edit($id)
     {
-        //
-    }
+        $cargo = Cargo::find($id);
 
+        return view('cargos.update')->with([
+            'message'  => "",
+            'error'  => "",
+            'cargo'  => $cargo,
+        ]);
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -67,9 +119,22 @@ class CargoController extends Controller
      * @param  \App\Models\Cargo  $cargo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cargo $cargo)
+    public function update(Request $request,  $id)
     {
-        //
+
+        $cargo = Cargo::find($id);
+        
+        $cargo->nombre = $request->input('nombre_cargo');
+        $cargo->save();
+        
+        $cargos = Cargo::all();
+
+        return view('cargos.index')->with([
+            'cargos'  => $cargos,
+            'message' => 'Cargo editado correctamente',
+            'error' => '',
+        ]);
+
     }
 
     /**

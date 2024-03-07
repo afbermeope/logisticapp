@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tarifa;
+use App\Models\Cargo;
 use Illuminate\Http\Request;
 
 class TarifaController extends Controller
@@ -78,8 +79,15 @@ class TarifaController extends Controller
      * @param  \App\Models\Tarifa  $tarifa
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tarifa $tarifa)
+    public function destroy(Request $request, $id)
     {
-        //
+        $cargo_id = $request->get("cargo_id");  
+        $tarifa = Tarifa::find($id);
+        $tarifa->delete();
+        $cargo = Cargo::find($cargo_id);
+        
+        return view('cargos.tarifas')->with([
+            'cargo'  => $cargo
+        ]);
     }
 }
