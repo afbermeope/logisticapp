@@ -29,61 +29,68 @@
                     <!-- general form elements -->
                     <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Vincula al personal a un evento</h3>
+                        <h3 class="card-title">Editar</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->                
-                    <form action="/cabecera" method="POST">
+                    <form action="{{ route('cabecera.update',$cabecera->id) }}" method="POST" role="form">
                         @csrf
+                        <input name="_method" type="hidden" value="PATCH">
                         <div class="card-body row">
                             <div class="form-group col-md-4">
                                 <label for="persona_id">Personal</label>
-                                <select class=" select2" style="width: 100%;" name="persona_id" id="persona_id" required>
+                                <select class="select2" style="width: 100%;" name="persona_id" id="persona_id" required>
                                     <option value="" selected>Seleccione</option>
                                     @foreach ($personas as $persona)
-                                        <option value="{{$persona->id}}">{{$persona->nombre}}</option>
+                                        <option value="{{ $persona->id }}" {{ $persona->id == $cabecera->persona->id ? 'selected' : '' }}>
+                                            {{ $persona->nombre }}
+                                        </option>
                                     @endforeach
-                                </select>    
+                                </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="evento_id">Evento</label>
-                                <select class=" select2" style="width: 100%;" name="evento_id" id="evento_id" required onChange="getZonas()">
+                                <select class="select2" style="width: 100%;" name="evento_id" id="evento_id" required onChange="getZonas()">
                                     <option value="" selected>Seleccione</option>
                                     @foreach ($eventos as $evento)
-                                        <option value="{{$evento->id}}">{{$evento->nombre}}</option>
+                                        <option value="{{ $evento->id }}" {{ $evento->id == $cabecera->zona->evento->id ? 'selected' : '' }}>
+                                            {{ $evento->nombre }}
+                                        </option>
                                     @endforeach
-                                </select>                            
-                            </div>
+                                </select>
+                            </div>                            
                             <div class="form-group col-md-4">
                                 <label for="zona_id">Zona</label>
                                 <select class=" select2" style="width: 100%;" name="zona_id" id="zona_id" required> 
-                                    <option value="">Selecciona</option>
+                                    <option value="{{$cabecera->zona->id}}" selected>{{$cabecera->zona->nombre}}</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="cargo_id">Cargo</label>
-                                <select class=" select2" style="width: 100%;" name="cargo_id" id="cargo_id" required onChange="getTarifas()">
+                                <select class="select2" style="width: 100%;" name="cargo_id" id="cargo_id" required onChange="getTarifas()">
                                     <option value="" selected>Seleccione</option>
                                     @foreach ($cargos as $cargo)
-                                        <option value="{{$cargo->id}}">{{$cargo->nombre}}</option>
+                                        <option value="{{ $cargo->id }}" {{ $cargo->id == $cabecera->tarifa->cargo->id ? 'selected' : '' }}>
+                                            {{ $cargo->nombre }}
+                                        </option>
                                     @endforeach
-                                </select>                            
-                            </div>
+                                </select>
+                            </div>                            
                             <div class="form-group col-md-4">
                                 <label for="tarifa_id">Tarifa</label>
                                 <select class=" select2" style="width: 100%;" name="tarifa_id" id="tarifa_id" required> 
-                                    <option value="">Seleccione</option>
+                                    <option value="{{$cabecera->tarifa->id}}" selected>${{$cabecera->tarifa->valor}} - {{$cabecera->tarifa->hora}}</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="hora_inicio">Hora inicio</label>
                                 <br>
-                                <input type="time" name="hora_inicio" id="hora_inicio" required>
+                                <input type="time" name="hora_inicio" id="hora_inicio" required value="{{ substr($cabecera->horario, 0, 5) }}">
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="hora_fin">Hora fin</label>
                                 <br>
-                                <input type="time" name="hora_fin" id="hora_fin" required>
+                                <input type="time" name="hora_fin" id="hora_fin" required value="{{ substr($cabecera->horario, -5) }}">
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -92,45 +99,6 @@
                         <button type="submit" class="btn btn-secondary">Subir</button>
                         </div>
                     </form>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="card card-secondary">
-                        <div class="card-header">
-                            <h3 class="card-title">Lista de usuarios</h3>
-                        </div>
-                        <div class="card-body">
-                            <table id="cabecera-table" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Persona</th>
-                                        <th>Evento</th>
-                                        <th>Zona</th>
-                                        <th>Cargo</th>
-                                        <th>Valor tarifa</th>
-                                        <th>Valor hora</th>
-                                        <th>Editar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($cabeceras as $cabecera)
-                                        <tr>
-                                            <td>{{ $cabecera->persona->nombre }}</td>
-                                            <td>{{ $cabecera->zona->evento->nombre }}</td>
-                                            <td>{{ $cabecera->zona->nombre }}</td>
-                                            <td>{{ $cabecera->tarifa->cargo->nombre }}</td>
-                                            <td>{{ $cabecera->tarifa->valor }}</td>
-                                            <td>{{ $cabecera->tarifa->hora }}</td>
-                                            <td>
-                                                <a href="/cabecera/{{$cabecera->id}}/edit" target="_blank">
-                                                    <button class="btn btn-secondary" type="button">Editar</button>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -244,48 +212,4 @@
           sel.readOnly = false;
       }
 </script>
-
-<script>
-    $(function () {
-      $("#cabecera-table").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": [
-            {"extend": 'csvHtml5', 
-            "exportOptions": {
-                "columns": [ 0,1,2,3,4, ':visible' ]
-            }}, 
-            {"extend": 'excelHtml5', 
-            "exportOptions": {
-                "columns": [ 0,1,2,3,4, ':visible' ]
-            }},{"extend": 'pdfHtml5', 
-            "exportOptions": {
-                "columns": [ 0,1,2,3,4, ':visible' ]
-            }}, "colvis" ],
-        "language": {
-            "processing": "Procesando...",
-            "lengthMenu": "Mostrar _MENU_ registros",
-            "zeroRecords": "No se encontraron resultados",
-            "emptyTable": "Ningún dato disponible en esta tabla",
-            "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "search": "Buscar:",
-            "infoThousands": ",",
-            "loadingRecords": "Cargando...",
-            "paginate": {
-                "first": "Primero",
-                "last": "Último",
-                "next": "Siguiente",
-                "previous": "Anterior"
-            },     
-            "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-            "buttons": {
-                "copy": "Copiar",
-                "colvis": "Visibilidad",
-            },
-        },
-        
-      }).buttons().container().appendTo('#cabecera-table_wrapper .col-md-6:eq(0)');
-    });
-  </script>
-
 
