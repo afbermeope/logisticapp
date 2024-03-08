@@ -46,6 +46,8 @@ class PersonaController extends Controller
         $telefono = $request->input('telefono');
         $email = $request->input('email');
 
+        $cedula = str_pad($cedula, 10, '0', STR_PAD_LEFT);
+
         $persona = Persona::create(
             [
                 'nombre' => $nombre,

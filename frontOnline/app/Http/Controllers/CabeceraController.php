@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Evento;
 use App\Models\Cabecera;
+use App\Models\Cargo;
 use App\Models\Persona;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class CabeceraController extends Controller
 {
@@ -15,12 +18,16 @@ class CabeceraController extends Controller
      */
     public function index()
     {
-        $eventos = Evento::where('estado','A');
-        $personas = Persona::where('estado','A');
-        $cargos = Cargo::where('estado','A');
-        $eventos = Evento::where('estado','A');
+        $cabeceras = Cabecera::where('estado','A')->get();
+        $eventos = Evento::where('estado','A')->get();
+        $personas = Persona::where('estado','A')->get();
+        $cargos = Cargo::where('estado','A')->get();
 
         return view('cabeceras.index')->with([
+            'cabeceras'  => $cabeceras,
+            'eventos'  => $eventos,
+            'personas'  => $personas,
+            'cargos'  => $cargos,
             'message'  => "",
             'error'  => "",
         ]);
@@ -44,7 +51,43 @@ class CabeceraController extends Controller
      */
     public function store(Request $request)
     {
-       
+        $persona_id = $request->input('persona_id');
+        $evento_id = $request->input('evento_id');
+        $zona_id = $request->input('zona_id');
+        $cargo_id = $request->input('cargo_id');
+        $tarifa_id = $request->input('tarifa_id');
+        $hora_inicio = $request->input('hora_inicio');
+        $hora_fin = $request->input('hora_fin');
+        // Crea instancias de Carbon para las horas de inicio y fin
+        $carbonInicio = Carbon::createFromFormat('H:i', $hora_inicio);
+        $carbonFin = Carbon::createFromFormat('H:i', $hora_fin);
+        // Calcula la diferencia en horas
+        $diferenciaHoras = $carbonInicio->diffInHours($carbonFin);
+
+        $cabecera = Cabecera::create([
+            "persona_id" => $persona_id,
+            "evento_id" => $evento_id,
+            "zona_id" => $zona_id,
+            "cargo_id" => $cargo_id,
+            "tarifa_id" => $tarifa_id,
+            "horario" => $hora_inicio."-".$hora_fin ,
+            "cantidad_horas" => $diferenciaHoras,
+            "estado" => "A",
+        ]);
+
+        $cabeceras = Cabecera::where('estado','A')->get();
+        $eventos = Evento::where('estado','A')->get();
+        $personas = Persona::where('estado','A')->get();
+        $cargos = Cargo::where('estado','A')->get();
+
+        return view('cabeceras.index')->with([
+            'cabeceras'  => $cabeceras,
+            'eventos'  => $eventos,
+            'personas'  => $personas,
+            'cargos'  => $cargos,
+            'message'  => "Cabecera agregada correctamente",
+            'error'  => "",
+        ]);
     }
 
     /**
@@ -55,7 +98,7 @@ class CabeceraController extends Controller
      */
     public function show(Cabecera $cabecera)
     {
-        //
+        
     }
 
     /**

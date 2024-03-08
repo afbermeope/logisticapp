@@ -137,6 +137,13 @@ class CargoController extends Controller
 
     }
 
+    public function getTarifas($cargo_id){
+
+        $tarifas = Tarifa::all()->where('cargo_id',$cargo_id);
+        return $tarifas;   
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *

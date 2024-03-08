@@ -152,6 +152,13 @@ class EventoController extends Controller
 
     }
 
+    public function getZonas($evento_id){
+
+        $zonas = Zona::all()->where('evento_id',$evento_id);
+        return $zonas;   
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -42,10 +42,13 @@ Auth::routes();
     Route::resource('detalleTurno', DetalleTurnoController::class);
     Route::resource('cabecera', CabeceraController::class);
 
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/eventos/{id}/agregarZona', [EventoController::class, 'agregarZonaView']);
     Route::get('/cargos/{id}/agregarTarifa', [CargoController::class, 'agregarTarifaView']);
-    
+    Route::get('/evento/getZonas/{evento_id}', [EventoController::class, 'getZonas']);
+    Route::get('/cargo/getTarifas/{cargo_id}', [CargoController::class, 'getTarifas']);
+
     Route::post('/eventos/agregarZona/', [EventoController::class, 'agregarZona']);
     Route::post('/cargos/agregarTarifa/', [CargoController::class, 'agregarTarifa']);
 // });
