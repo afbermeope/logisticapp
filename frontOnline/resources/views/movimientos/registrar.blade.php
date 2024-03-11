@@ -114,6 +114,15 @@
 
       document.getElementById('checkboxGorro').checked = true;
       document.getElementById('checkboxChaleco').checked = true;
+
+      // Evento de escucha para el textarea
+      document.getElementById('codigoBarrasInput').addEventListener('keydown', function (event) {
+                if (event.key === 'Tab' || event.key === 'Enter') {
+                    event.preventDefault(); // Evita el comportamiento por defecto del Tab o Enter
+                    // Abre el modal
+                    $('#codigoBarrasModal').modal('show');
+                }
+            });
     });
   </script>
 

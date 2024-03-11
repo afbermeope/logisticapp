@@ -188,6 +188,12 @@ class CabeceraController extends Controller
 
     public function agregarMovimiento(Request $request)
     {
+        $cedula = $request->get('');
+        $chaleco = $request->get('');
+        $gorro = $request->get('');
+        $otro = $request->get('');
+
+
         return "";
     }
 }
