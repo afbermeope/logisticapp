@@ -216,7 +216,7 @@ class CabeceraController extends Controller
                 $fechaServidor = Carbon::now('America/Bogota'); // Obtén la fecha actual del servidor y ajusta la zona horaria
                 $fechaInicioEvento = Carbon::parse($zona->evento->fecha_inicio);
                 $fechaFinEvento = Carbon::parse($zona->evento->fecha_fin);
-
+                
                 // Verifica si la fecha del servidor está dentro del rango del evento
                 if ($fechaServidor->between($fechaInicioEvento, $fechaFinEvento)) {
                     // Estamos dentro del evento
