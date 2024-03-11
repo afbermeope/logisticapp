@@ -210,7 +210,7 @@ class CabeceraController extends Controller
             ->first();
             
             if ($cabecera === null) {
-                return "Persona no encontrada en el evento: "+$zona->evento->nombre;
+                return "Persona no encontrada en el evento: ".$zona->evento->nombre;
             } else {
 
                 $fechaServidor = Carbon::now('America/Bogota'); // Obtén la fecha actual del servidor y ajusta la zona horaria
