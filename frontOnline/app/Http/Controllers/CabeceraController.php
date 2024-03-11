@@ -213,12 +213,12 @@ class CabeceraController extends Controller
                 return "Persona no encontrada en el evento: ".$zona->evento->nombre;
             } else {
 
-                $fechaServidor = Carbon::now('America/Bogota'); // Obtén la fecha actual del servidor y ajusta la zona horaria
+                $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
+                $fechaServidor = Carbon::parse($fechaServidor);
                 $fechaInicioEvento = Carbon::parse($zona->evento->fecha_inicio);
                 $fechaFinEvento = Carbon::parse($zona->evento->fecha_fin);
-                
                 // Verifica si la fecha del servidor está dentro del rango del evento
-                if ($fechaServidor->between($fechaInicioEvento, $fechaFinEvento)) {
+                if ($fechaServidor->between($fechaInicioEvento, $fechaFinEvento) || ($fechaInicioEvento->toDateString() == $fechaServidor->toDateString()) ) {
                     // Estamos dentro del evento
                     $diasTranscurridos = $fechaInicioEvento->diffInDays($fechaServidor)+1;
                     
@@ -276,8 +276,10 @@ class CabeceraController extends Controller
                     }
                     
                 } else {
+
+
                     // No estamos dentro del evento
-                    echo "No estamos dentro del evento. Hoy es " . $fechaServidor->toDateString();
+                    echo "No estamos dentro del evento. Hoy es " . $fechaServidor->toDateString(). " y el evento es hasta ".$fechaFinEvento->toDateString();
                 }
                 
             }
