@@ -44,35 +44,10 @@
 </head>
 <body>
   <!-- Modal -->
-  <div class="modal fade" id="codigoBarrasModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="codigoBarrasModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Opciones de Escaneo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="checkboxGorro">
-                        <label class="form-check-label" for="checkboxGorro">Gorro</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="checkboxChaleco">
-                        <label class="form-check-label" for="checkboxChaleco">Chaleco</label>
-                    </div>
-                    <div class="form-group mt-3">
-                        <label for="textoOtro">Especifique (Otro):</label>
-                        <input type="text" class="form-control" id="textoOtro" placeholder="Especifique...">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="escanearCodigoBarras()">Escanear</button>
-            </div>
+        <div class="modal-content" id="result">
+            
         </div>
     </div>
 </div>
@@ -86,7 +61,7 @@
             <div class="form-group">
                 <textarea class="form-control" rows="5" id="codigoBarrasInput" placeholder="Ingrese el código de barras"></textarea>
             </div>
-            <button class="btn btn-primary" id="escanearBtn" data-toggle="modal" data-target="#codigoBarrasModal">Escanear</button>
+            <button class="btn btn-primary" id="escanearBtn" data-toggle="modal" onclick="escanearCodigoBarras()">Escanear</button>
         </div>
     </div>
     <script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
@@ -112,30 +87,21 @@
       // Selecciona automáticamente el textarea al cargar la página
       document.getElementById('codigoBarrasInput').select();
 
-      document.getElementById('checkboxGorro').checked = true;
-      document.getElementById('checkboxChaleco').checked = true;
-
       // Evento de escucha para el textarea
       document.getElementById('codigoBarrasInput').addEventListener('keydown', function (event) {
                 if (event.key === 'Tab' || event.key === 'Enter') {
                     event.preventDefault(); // Evita el comportamiento por defecto del Tab o Enter
                     // Abre el modal
-                    $('#codigoBarrasModal').modal('show');
+                    escanearCodigoBarras();
                 }
             });
     });
   </script>
 
-  <script>
+<script>
     function escanearCodigoBarras() {
       var codigoBarras = document.getElementById('codigoBarrasInput').value;
-      // Obtener el estado de los checkboxes
-      var checkboxGorro = document.getElementById('checkboxGorro').checked;
-      var checkboxChaleco = document.getElementById('checkboxChaleco').checked;
       var evento_id = {{$evento_id}};
-      // Obtener el texto del campo "Otro"
-      var textoOtro = document.getElementById('textoOtro').value;
-
       let _token = $('meta[name="csrf-token"]').attr('content');
 
       $.ajax({
@@ -144,20 +110,49 @@
         data:{
           evento_id:evento_id,
           codigoBarras:codigoBarras,
-          checkboxGorro:checkboxGorro,
-          checkboxChaleco:checkboxChaleco,
-          textoOtro:textoOtro,
           _token: _token
         },
         success:function(response){
-          // console.log(response);
-          if(response == "ok"){
-            alert("Bienvenido");
-            document.getElementById('codigoBarrasInput').value = "";
-            location.reload();
-          }else{
-            alert(response); 
-          }
+            // alert(response);
+            if(response) {
+                $("#result").html(response); 
+            }
+          $('#codigoBarrasModal').modal('show');
+        },
+      });
+  };
+</script>
+
+<script>
+    function registrarElemento() {
+      var codigoBarras = document.getElementById('codigoBarrasInput');
+      var checkboxGorro = document.getElementById('checkboxGorro');
+      var checkboxChaleco = document.getElementById('checkboxChaleco');
+      var checkboxOtro = document.getElementById('checkboxOtro');
+      var movimiento_id = document.getElementById('movimiento_id');
+      var textoOtro = document.getElementById('textoOtro');
+      let _token = $('meta[name="csrf-token"]').attr('content');
+
+      $.ajax({
+        url: "{{URL::to('/elemento/')}}",
+        type:"POST",
+        data:{
+            movimiento_id: movimiento_id ? movimiento_id.value : "",
+            codigoBarras: codigoBarras ? codigoBarras.checked : false,
+            checkboxGorro: checkboxGorro ? checkboxGorro.checked : false,
+            checkboxChaleco: checkboxChaleco ? checkboxChaleco.checked : false,
+            checkboxOtro: checkboxOtro ? checkboxOtro.checked : null,
+            textoOtro: textoOtro ? textoOtro.value : "",
+            _token: _token
+        },
+        success:function(response){
+            if(response == "ok"){
+                alert("Bienvenido");
+                document.getElementById('codigoBarrasInput').value = "";
+                location.reload();
+            }else{
+                alert(response); 
+            }
         },
       });
   };

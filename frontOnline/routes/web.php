@@ -9,6 +9,7 @@ use App\Http\Controllers\DetalleTurnoController;
 use App\Http\Controllers\ZonaController;
 use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\CabeceraController;
+use App\Http\Controllers\ElementoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('persona', PersonaController::class);
     Route::resource('detalleTurno', DetalleTurnoController::class);
     Route::resource('cabecera', CabeceraController::class);
+    Route::resource('elemento', ElementoController::class);
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/eventos/{id}/agregarZona', [EventoController::class, 'agregarZonaView']);
@@ -52,5 +54,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/eventos/agregarZona/', [EventoController::class, 'agregarZona']);
     Route::post('/cargos/agregarTarifa/', [CargoController::class, 'agregarTarifa']);
+    
 });
 

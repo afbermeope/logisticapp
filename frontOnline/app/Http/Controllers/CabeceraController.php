@@ -9,6 +9,7 @@ use App\Models\Persona;
 use App\Models\Zona;
 use App\Models\DetalleTurno;
 use App\Models\Movimiento;
+use App\Models\Elemento;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -193,11 +194,7 @@ class CabeceraController extends Controller
     public function agregarMovimiento(Request $request)
     {
         $cedula = $request->get('codigoBarras');
-        $evento_id = $request->get('evento_id');
-        $chaleco = $request->get('checkboxChaleco');
-        $gorro = $request->get('checkboxGorro');
-        $otro = $request->get('textoOtro');
-        
+        $evento_id = $request->get('evento_id');        
         try {
             //remuevo el resto de la carreta
             $cedula = substr($cedula, 0, 10);
@@ -210,7 +207,9 @@ class CabeceraController extends Controller
             ->first();
             
             if ($cabecera === null) {
-                return "Persona no encontrada en el evento: ".$zona->evento->nombre;
+                return view('cabeceras.elementoRespuesta')->with([
+                    'mensaje'  => "Persona no encontrada en el evento: ".$zona->evento->nombre,
+                ]);
             } else {
 
                 $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
@@ -229,7 +228,7 @@ class CabeceraController extends Controller
                     ->first();
                     
                     if($findDetalleTurno === null){
-                        //sino crearlo
+                        //si no crearlo
                         $detalleTurno = DetalleTurno::create([
                             'estado' => 'A',
                             'cabecera_id' => $cabecera->id,
@@ -243,8 +242,13 @@ class CabeceraController extends Controller
                             "detalle_turno_id" => $detalleTurno->id,
                         ]);
 
-                        //TODO: Asignar los elementos
-                        return "ok";
+                        return view('cabeceras.agregarElemento')->with([
+                            'movimiento'  => $movimiento,
+                            'persona'  => $persona,
+                            'elementos'  => null,
+                            'message'  => "",
+                            'error'  => "",
+                        ]);
 
                     }else{
                         //validar que exista checkin
@@ -262,26 +266,32 @@ class CabeceraController extends Controller
                             ->first();
 
                             if($movimientoCheckout != null){
-                                return "Esta persona ya realizó los movimientos del dia (checkin-checkout)";
+                                return view('cabeceras.elementoRespuesta')->with([
+                                    'mensaje'  => "Esta persona ya realizó los movimientos del dia (checkin-checkout)"
+                                ]);
                             }else{
                                 $movimiento = Movimiento::create([
                                     "descripcion" => 'checkout',
                                     "estado" => 'A',
                                     "detalle_turno_id" => $findDetalleTurno->id,
                                 ]);
-                                //TODO: averiguar como mostrar los elementos 
-                                return "checkout";
+                                $elementos = Elemento::where('movimiento_id',$findMovimiento->id)->get();
+                                return view('cabeceras.agregarElemento')->with([
+                                    'movimiento'  => $movimiento,
+                                    'persona'  => $persona,
+                                    'elementos'  => $elementos,
+                                    'message'  => "",
+                                    'error'  => "",
+                                ]);
                             }
                         }
                     }
                     
                 } else {
-
-
-                    // No estamos dentro del evento
-                    echo "No estamos dentro del evento. Hoy es " . $fechaServidor->toDateString(). " y el evento es hasta ".$fechaFinEvento->toDateString();
-                }
-                
+                    return view('cabeceras.elementoRespuesta')->with([
+                        'mensaje'  => "No estamos dentro del evento. Hoy es " . $fechaServidor->toDateString(). " y el evento es hasta ".$fechaFinEvento->toDateString()
+                    ]);
+                }   
             }
 
         } catch (\Throwable $th) {
@@ -289,4 +299,5 @@ class CabeceraController extends Controller
         }
        
     }
+    
 }
