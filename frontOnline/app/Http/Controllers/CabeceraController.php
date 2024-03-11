@@ -220,7 +220,7 @@ class CabeceraController extends Controller
                 // Verifica si la fecha del servidor está dentro del rango del evento
                 if ($fechaServidor->between($fechaInicioEvento, $fechaFinEvento)) {
                     // Estamos dentro del evento
-                    $diasTranscurridos = $fechaInicioEvento->diffInDays($fechaServidor);
+                    $diasTranscurridos = $fechaInicioEvento->diffInDays($fechaServidor)+1;
                     
                     //Validar si ya hay un detalle turno con este dia
                     $findDetalleTurno = DetalleTurno::where('estado','A')
