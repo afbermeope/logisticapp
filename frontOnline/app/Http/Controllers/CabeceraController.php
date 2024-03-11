@@ -99,6 +99,14 @@ class CabeceraController extends Controller
         
     }
 
+    public function registrarMovimientoView($evento_id)
+    {
+        return view('movimientos.registrar')->with([
+            'message'  => "",
+            'error'  => "",
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -176,5 +184,10 @@ class CabeceraController extends Controller
     public function destroy(Cabecera $cabecera)
     {
         //
+    }
+
+    public function agregarMovimiento(Request $request)
+    {
+        return "";
     }
 }

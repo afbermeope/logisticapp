@@ -30,9 +30,11 @@ Route::get('/prueba', function () {
 });
 
 Auth::routes();
-// Route::resource('detalleTurno', DetalleTurnoController::class);
+Route::get('/registrarMovimiento/{evento_id}', [CabeceraController::class, 'registrarMovimientoView']);
 
-// Route::group(['middleware' => 'auth'], function () {
+Route::post('/cabecera/agregarMovimiento/', [CabeceraController::class, 'agregarMovimiento']);
+
+Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('evento', EventoController::class);
     Route::resource('zona', ZonaController::class);
@@ -42,7 +44,6 @@ Auth::routes();
     Route::resource('detalleTurno', DetalleTurnoController::class);
     Route::resource('cabecera', CabeceraController::class);
 
-
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/eventos/{id}/agregarZona', [EventoController::class, 'agregarZonaView']);
     Route::get('/cargos/{id}/agregarTarifa', [CargoController::class, 'agregarTarifaView']);
@@ -51,5 +52,5 @@ Auth::routes();
 
     Route::post('/eventos/agregarZona/', [EventoController::class, 'agregarZona']);
     Route::post('/cargos/agregarTarifa/', [CargoController::class, 'agregarTarifa']);
-// });
+});
 
