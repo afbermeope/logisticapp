@@ -153,6 +153,7 @@
           // console.log(response);
           if(response == "ok"){
             alert("Bienvenido");
+            codigoBarras = "";
             location.reload();
           }else{
             alert(response); 
