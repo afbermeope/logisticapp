@@ -9,7 +9,7 @@ class Persona extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'cedula', 'telefono', 'correo', 'direccion', 'estado'];
+    protected $fillable = ['id', 'nombre', 'cedula', 'telefono', 'correo', 'direccion', 'estado'];
 
     public function cabeceras()
     {

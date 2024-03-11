@@ -6,6 +6,9 @@ use App\Models\Evento;
 use App\Models\Cabecera;
 use App\Models\Cargo;
 use App\Models\Persona;
+use App\Models\Zona;
+use App\Models\DetalleTurno;
+use App\Models\Movimiento;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -102,6 +105,7 @@ class CabeceraController extends Controller
     public function registrarMovimientoView($evento_id)
     {
         return view('movimientos.registrar')->with([
+            'evento_id'  => $evento_id,
             'message'  => "",
             'error'  => "",
         ]);
@@ -188,12 +192,99 @@ class CabeceraController extends Controller
 
     public function agregarMovimiento(Request $request)
     {
-        $cedula = $request->get('');
-        $chaleco = $request->get('');
-        $gorro = $request->get('');
-        $otro = $request->get('');
+        $cedula = $request->get('codigoBarras');
+        $evento_id = $request->get('evento_id');
+        $chaleco = $request->get('checkboxChaleco');
+        $gorro = $request->get('checkboxGorro');
+        $otro = $request->get('textoOtro');
+        
+        try {
+            //remuevo el resto de la carreta
+            $cedula = substr($cedula, 0, 10);
+            $persona = Persona::where('cedula', $cedula)->first();
+            $zona = Zona::where('evento_id', $evento_id)->first();
+            
+            $cabecera = Cabecera::where('zona_id', '=', $zona->id)
+            ->where('persona_id', '=', $persona->id)
+            ->where('estado', '=', 'A')
+            ->first();
+            
+            if ($cabecera === null) {
+                return "vacio";
+            } else {
 
+                $fechaServidor = Carbon::now('America/Bogota'); // Obtén la fecha actual del servidor y ajusta la zona horaria
+                $fechaInicioEvento = Carbon::parse($zona->evento->fecha_inicio);
+                $fechaFinEvento = Carbon::parse($zona->evento->fecha_fin);
 
-        return "";
+                // Verifica si la fecha del servidor está dentro del rango del evento
+                if ($fechaServidor->between($fechaInicioEvento, $fechaFinEvento)) {
+                    // Estamos dentro del evento
+                    $diasTranscurridos = $fechaInicioEvento->diffInDays($fechaServidor);
+                    
+                    //Validar si ya hay un detalle turno con este dia
+                    $findDetalleTurno = DetalleTurno::where('estado','A')
+                    ->where('cabecera_id', $cabecera->id)
+                    ->where('numero_dia', $diasTranscurridos)
+                    ->first();
+                    
+                    if($findDetalleTurno === null){
+                        //sino crearlo
+                        $detalleTurno = DetalleTurno::create([
+                            'estado' => 'A',
+                            'cabecera_id' => $cabecera->id,
+                            'numero_dia' => $diasTranscurridos
+                        ]);
+
+                        //Crear primer movimiento
+                        $movimiento = Movimiento::create([
+                            "descripcion" => 'checkin',
+                            "estado" => 'A',
+                            "detalle_turno_id" => $detalleTurno->id,
+                        ]);
+
+                        //TODO: Asignar los elementos
+                        return "ok";
+
+                    }else{
+                        //validar que exista checkin
+                        $findMovimiento = Movimiento::where('descripcion', 'checkin')
+                        ->where('estado', 'A')
+                        ->where('detalle_turno_id', $findDetalleTurno->id)
+                        ->first();
+
+                        if($findMovimiento != null ){
+
+                            //validar que exista checkout
+                            $movimientoCheckout = Movimiento::where('descripcion', 'checkout')
+                            ->where('estado', 'A')
+                            ->where('detalle_turno_id', $findDetalleTurno->id)
+                            ->first();
+
+                            if($movimientoCheckout != null){
+                                return "Esta persona ya realizó los movimientos del dia (checkin-checkout)";
+                            }else{
+                                $movimiento = Movimiento::create([
+                                    "descripcion" => 'checkout',
+                                    "estado" => 'A',
+                                    "detalle_turno_id" => $findDetalleTurno->id,
+                                ]);
+                                //TODO: averiguar como mostrar los elementos 
+                                return "checkout";
+                            }
+                        }
+                    }
+                    
+                } else {
+                    // No estamos dentro del evento
+                    echo "No estamos dentro del evento. Hoy es " . $fechaServidor->toDateString();
+                }
+                
+            }
+
+        } catch (\Throwable $th) {
+            return $th;
+        }
+       
     }
 }

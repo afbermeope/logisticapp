@@ -132,15 +132,17 @@
       // Obtener el estado de los checkboxes
       var checkboxGorro = document.getElementById('checkboxGorro').checked;
       var checkboxChaleco = document.getElementById('checkboxChaleco').checked;
+      var evento_id = {{$evento_id}};
       // Obtener el texto del campo "Otro"
       var textoOtro = document.getElementById('textoOtro').value;
 
-      let _token   = $('meta[name="csrf-token"]').attr('content');
+      let _token = $('meta[name="csrf-token"]').attr('content');
 
       $.ajax({
         url: "{{URL::to('/cabecera/agregarMovimiento/')}}",
         type:"POST",
         data:{
+          evento_id:evento_id,
           codigoBarras:codigoBarras,
           checkboxGorro:checkboxGorro,
           checkboxChaleco:checkboxChaleco,
@@ -149,7 +151,12 @@
         },
         success:function(response){
           // console.log(response);
-          alert("yay");
+          if(response == "ok"){
+            alert("Bienvenido");
+            location.reload();
+          }else{
+            alert(response); 
+          }
         },
       });
   };
