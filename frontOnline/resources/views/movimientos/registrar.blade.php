@@ -153,7 +153,7 @@
           // console.log(response);
           if(response == "ok"){
             alert("Bienvenido");
-            codigoBarras = "";
+            document.getElementById('codigoBarrasInput').value = "";
             location.reload();
           }else{
             alert(response); 
