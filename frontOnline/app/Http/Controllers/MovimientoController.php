@@ -14,7 +14,13 @@ class MovimientoController extends Controller
      */
     public function index()
     {
-        //
+        $movimientos = Movimiento::where('estado','A')->get();
+
+        return view('movimientos.index')->with([
+            'movimientos'  => $movimientos,
+            'message'  => "",
+            'error'  => "",
+        ]);
     }
 
     /**

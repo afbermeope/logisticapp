@@ -10,6 +10,7 @@ use App\Http\Controllers\ZonaController;
 use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\CabeceraController;
 use App\Http\Controllers\ElementoController;
+use App\Http\Controllers\MovimientoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,18 +23,13 @@ use App\Http\Controllers\ElementoController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/prueba', function () {
-    return view('prueba');
-});
 
 Auth::routes();
 Route::get('/registrarMovimiento/{evento_id}', [CabeceraController::class, 'registrarMovimientoView']);
+Route::get('/', [CabeceraController::class, 'seleccionarEvento']);
 
 Route::post('/cabecera/agregarMovimiento/', [CabeceraController::class, 'agregarMovimiento']);
+
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -43,6 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('cargo', CargoController::class);
     Route::resource('persona', PersonaController::class);
     Route::resource('detalleTurno', DetalleTurnoController::class);
+    Route::resource('movimiento', MovimientoController::class);
     Route::resource('cabecera', CabeceraController::class);
     Route::resource('elemento', ElementoController::class);
 

@@ -98,15 +98,16 @@
                                 <table id="tarifas-table" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Nombre</th>
+                                            <th>Hora</th>
+                                            <th>Valor</th>
                                             <th>Eliminar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($cargo->tarifas as $tarifa)
                                             <tr>
-                                                <td>{{ $tarifa->valor }}</td>
                                                 <td>{{ $tarifa->hora }}</td>
+                                                <td>{{ $tarifa->valor }}</td>
                                                 <td>
                                                     <button class="btn btn-danger" type="button" onClick="confirmDelete({{$tarifa->id}})">Eliminar</button>
                                                 </td>

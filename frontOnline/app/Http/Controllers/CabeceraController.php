@@ -200,7 +200,34 @@ class CabeceraController extends Controller
             $cedula = substr($cedula, 0, 10);
             $persona = Persona::where('cedula', $cedula)->first();
             $zona = Zona::where('evento_id', $evento_id)->first();
-            
+
+
+            if(!$persona){
+                return view('cabeceras.elementoRespuesta')->with([
+                    'mensaje'  => "Usuario no existe en la base de datos: ".$zona->evento->nombre,
+                ]);
+            }
+
+
+            $detalleTurnoSinChekout = $this->tieneCheckinHuerfano($persona->id);
+
+            if($detalleTurnoSinChekout != null){
+                $movimiento = Movimiento::create([
+                    "descripcion" => 'checkout',
+                    "estado" => 'A',
+                    "detalle_turno_id" => $detalleTurnoSinChekout->id,
+                ]);
+
+                return view('cabeceras.agregarElemento')->with([
+                    'movimiento'  => $movimiento,
+                    'persona'  => $persona,
+                    'elementos'  => $detalleTurnoSinChekout->movimientos[0]->elementos,
+                    'message'  => "",
+                    'error'  => "",
+                ]);
+
+            }
+
             $cabecera = Cabecera::where('zona_id', '=', $zona->id)
             ->where('persona_id', '=', $persona->id)
             ->where('estado', '=', 'A')
@@ -213,7 +240,11 @@ class CabeceraController extends Controller
             } else {
 
                 $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
-                $fechaServidor = Carbon::parse($fechaServidor);
+                $fechaServidor = Carbon::parse("2024/03/18");
+
+                //TODO: validar que no exista un checkin abierto
+
+                // $fechaServidor = Carbon::parse($fechaServidor);
                 $fechaInicioEvento = Carbon::parse($zona->evento->fecha_inicio);
                 $fechaFinEvento = Carbon::parse($zona->evento->fecha_fin);
                 // Verifica si la fecha del servidor está dentro del rango del evento
@@ -300,4 +331,38 @@ class CabeceraController extends Controller
        
     }
     
+    public function seleccionarEvento()
+    {
+        $eventos = Evento::where('estado','A')->get();
+
+        return view('eventos.seleccionarEvento')->with([
+            'eventos'  => $eventos,
+            'message'  => "",
+            'error'  => "",
+        ]);
+
+    }
+
+    public function tieneCheckinHuerfano($personaId)
+    {
+        // Obtener el último DetalleTurno asociado a la persona actual sin checkout
+        $detalleTurnoSinCheckout = Persona::find($personaId)
+        ->cabeceras()
+        ->latest()
+        ->first()
+        ->detalleTurnos()
+        ->whereDoesntHave('movimientos', function ($query) {
+            $query->where('descripcion', 'checkout');
+        })
+        ->latest()
+        ->first();
+
+        if ($detalleTurnoSinCheckout) {
+            // $detalleTurnoSinCheckout contiene el DetalleTurno que no tiene checkout
+            return $detalleTurnoSinCheckout;
+        } else {
+            return null;
+        }
+    }
+
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetalleTurno;
 use App\Models\Persona;
 use App\Models\Movimiento;
+use App\Models\Cabecera;
 use Illuminate\Http\Request;
 
 class DetalleTurnoController extends Controller
@@ -16,7 +17,13 @@ class DetalleTurnoController extends Controller
      */
     public function index()
     {
-        //
+        $cabeceras = Cabecera::where('estado','A')->get();
+
+        return view('detalleTurnos.index')->with([
+            'cabeceras'  => $cabeceras,
+            'message'  => "",
+            'error'  => "",
+        ]);
     }
 
     /**

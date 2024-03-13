@@ -139,14 +139,23 @@
                   </p>
                 </a>
               </li>
-            <li class="nav-item">
-              <a href="/detalleTurno" class="nav-link">
-                <i class="nav-icon fa fa-compress"></i>
-                <p>
-                    Movimientos
-                </p>
-              </a>
-            </li>
+              <li class="nav-item">
+                <a href="/detalleTurno" class="nav-link">
+                  <i class="nav-icon fa fa-compress"></i>
+                  <p>
+                      Personal Montaje/Desmontaje
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/movimiento" class="nav-link">
+                  <i class="nav-icon fa fa-compress"></i>
+                  <p>
+                      Movimientos
+                  </p>
+                </a>
+              </li>
+           
             <li class="nav-item">
               <a href="/account-sign-out" class="nav-link">
                 <i class=" fas fa-sign-out-alt"></i>
