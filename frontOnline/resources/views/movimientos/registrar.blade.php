@@ -143,7 +143,8 @@
         success:function(response){
             if(response == "ok"){
                 alert("Bienvenido");
-                location.reload();
+                document.getElementById('codigoBarrasInput').value = "";
+                limpiarCacheYRecargar()
             }else{
               limpiarCacheYRecargar()
             }
