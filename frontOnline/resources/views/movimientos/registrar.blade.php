@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
+@include('main')
     <title>LogisticApp | Dashboard</title>
     
       <!-- Google Font: Source Sans Pro -->
@@ -148,14 +143,30 @@
         success:function(response){
             if(response == "ok"){
                 alert("Bienvenido");
-                document.getElementById('codigoBarrasInput').value = "";
                 location.reload();
             }else{
-                alert(response); 
+              limpiarCacheYRecargar()
             }
         },
       });
   };
 </script>
+
+<script>
+  function limpiarCacheYRecargar() {
+    // Limpiar la caché del navegador
+    if (caches && caches.keys) {
+        caches.keys().then(function (names) {
+            names.forEach(function (name) {
+                caches.delete(name);
+            });
+        });
+    }
+    // Recargar la página
+    location.reload(true); // El parámetro true forza la recarga de la página desde el servidor, evitando el uso de la caché del navegador
+}
+
+</script>
+
 </body>
 </html>
