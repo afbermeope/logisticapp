@@ -48,6 +48,7 @@ class ElementoController extends Controller
                 Elemento::create([
                     'nombre' => 'chaleco',
                     'estado' => 'A',
+                    'cantidad' => '1',
                     'movimiento_id' => $movimiento_id,
                 ]);
             }
@@ -55,6 +56,7 @@ class ElementoController extends Controller
             if ($gorro == "true") {
                 Elemento::create([
                     'nombre' => 'gorro',
+                    'cantidad' => '1',
                     'estado' => 'A',
                     'movimiento_id' => $movimiento_id,
                 ]);        
@@ -64,6 +66,7 @@ class ElementoController extends Controller
                 Elemento::create([
                     'nombre' => $otro,
                     'estado' => 'A',
+                    'cantidad' => '1',
                     'movimiento_id' => $movimiento_id,
                 ]);
             }

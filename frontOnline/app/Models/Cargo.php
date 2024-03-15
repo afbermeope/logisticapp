@@ -16,6 +16,9 @@ class Cargo extends Model
         return $this->hasMany(Tarifa::class);
     }
 
-
+    public function cabeceras()
+    {
+        return $this->hasMany(Cabecera::class);
+    }
     
 }

@@ -16,4 +16,9 @@ class Evento extends Model
         return $this->hasMany(Zona::class);
     }
 
+    public function cabeceras()
+    {
+        return $this->hasMany(Cabecera::class);
+    }
+
 }

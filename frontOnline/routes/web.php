@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/eventos/agregarZona/', [EventoController::class, 'agregarZona']);
     Route::post('/cargos/agregarTarifa/', [CargoController::class, 'agregarTarifa']);
+    Route::post('/cabecera/subirExcel/', [CabeceraController::class, 'subirExcel']);
     
 });
 

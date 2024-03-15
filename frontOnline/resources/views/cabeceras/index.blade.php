@@ -25,7 +25,7 @@
         <div class="container-fluid">
         <!-- Main row -->
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-8">
                     <!-- general form elements -->
                     <div class="card card-secondary">
                     <div class="card-header">
@@ -92,6 +92,23 @@
                         <button type="submit" class="btn btn-secondary">Subir</button>
                         </div>
                     </form>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">O sube un archivo plano<h3>
+                        </div>
+                        <div class="card-body row">
+                            <form action="/cabecera/subirExcel" method="post" enctype="multipart/form-data">
+                                @csrf <!-- Asegúrate de incluir el token CSRF si estás utilizando Laravel -->
+                            
+                                <label for="archivo_excel">Selecciona un archivo Excel:</label>
+                                <input type="file" id="archivo_excel" name="archivo_excel" accept=".xlsx">
+                            
+                                <button type="submit">Subir Archivo</button>
+                            </form>                            
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-12">

@@ -10,6 +10,7 @@ use App\Models\Zona;
 use App\Models\DetalleTurno;
 use App\Models\Movimiento;
 use App\Models\Elemento;
+use App\Models\Tarifa;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -68,9 +69,14 @@ class CabeceraController extends Controller
         // Calcula la diferencia en horas
         $diferenciaHoras = $carbonInicio->diffInHours($carbonFin);
 
+        $zona = Zona::find($zona_id);
+        $tarifa = Tarifa::find($tarifa_id);
+
         $cabecera = Cabecera::create([
             "persona_id" => $persona_id,
             "zona_id" => $zona_id,
+            "evento_id" => $zona->evento->id,
+            "cargo_id" => $tarifa->cargo->id,
             "tarifa_id" => $tarifa_id,
             "horario" => $hora_inicio."-".$hora_fin ,
             "cantidad_horas" => $diferenciaHoras,
@@ -199,15 +205,40 @@ class CabeceraController extends Controller
             //remuevo el resto de la carreta
             $cedula = substr($cedula, 0, 10);
             $persona = Persona::where('cedula', $cedula)->first();
-            $zona = Zona::where('evento_id', $evento_id)->first();
-
-
+            
             if(!$persona){
                 return view('cabeceras.elementoRespuesta')->with([
-                    'mensaje'  => "Usuario no existe en la base de datos: ".$zona->evento->nombre,
+                    'mensaje'  => "Usuario no existe en la base de datos: ",
                 ]);
             }
 
+            $cabecera = Cabecera::where('evento_id', '=', $evento_id)
+            ->where('persona_id', '=', $persona->id)
+            ->where('estado', '=', 'A')
+            ->first();
+
+            // if(!$cabecera){
+            //     return view('cabeceras.elementoRespuesta')->with([
+            //         'mensaje'  => "Usuario no tiene turnos asignados: ",
+            //     ]);
+            // }
+
+            //no debe haber un detalleturno con el dia de hoy
+
+            $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
+            $fechaServidor = Carbon::parse("2024/03/16");
+            // $fechaServidor = Carbon::parse($fechaServidor);
+
+            $fechaInicioEvento = Carbon::parse($cabecera->evento->fecha_inicio);
+            $fechaFinEvento = Carbon::parse($cabecera->evento->fecha_fin);
+
+            foreach($cabecera->detalleTurnos as $detalleTurno){
+                if ($fechaInicioEvento->diffInDays($fechaServidor)+1 == $detalleTurno->numero_dia && $detalleTurno->estado != "A"){
+                    return view('cabeceras.elementoRespuesta')->with([
+                        'mensaje'  => "Turno del dia cumplido",
+                    ]);
+                }
+            }
 
             $detalleTurnoSinChekout = $this->tieneCheckinHuerfano($persona->id);
 
@@ -218,6 +249,9 @@ class CabeceraController extends Controller
                     "detalle_turno_id" => $detalleTurnoSinChekout->id,
                 ]);
 
+                $detalleTurnoSinChekout->estado = "I";
+                $detalleTurnoSinChekout->save();
+
                 return view('cabeceras.agregarElemento')->with([
                     'movimiento'  => $movimiento,
                     'persona'  => $persona,
@@ -225,28 +259,20 @@ class CabeceraController extends Controller
                     'message'  => "",
                     'error'  => "",
                 ]);
-
             }
 
-            $cabecera = Cabecera::where('zona_id', '=', $zona->id)
+
+            $cabecera = Cabecera::where('zona_id', '=', $cabecera->zona->id)
             ->where('persona_id', '=', $persona->id)
             ->where('estado', '=', 'A')
             ->first();
-            
+
             if ($cabecera === null) {
                 return view('cabeceras.elementoRespuesta')->with([
-                    'mensaje'  => "Persona no encontrada en el evento: ".$zona->evento->nombre,
+                    'mensaje'  => "Persona no encontrada en el evento: ".$cabecera->evento->nombre,
                 ]);
             } else {
-
-                $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
-                $fechaServidor = Carbon::parse("2024/03/18");
-
-                //TODO: validar que no exista un checkin abierto
-
-                // $fechaServidor = Carbon::parse($fechaServidor);
-                $fechaInicioEvento = Carbon::parse($zona->evento->fecha_inicio);
-                $fechaFinEvento = Carbon::parse($zona->evento->fecha_fin);
+    
                 // Verifica si la fecha del servidor está dentro del rango del evento
                 if ($fechaServidor->between($fechaInicioEvento, $fechaFinEvento) || ($fechaInicioEvento->toDateString() == $fechaServidor->toDateString()) ) {
                     // Estamos dentro del evento
@@ -306,6 +332,10 @@ class CabeceraController extends Controller
                                     "estado" => 'A',
                                     "detalle_turno_id" => $findDetalleTurno->id,
                                 ]);
+
+                                $findDetalleTurno->estado = "I";
+                                $findDetalleTurno->save();
+                                
                                 $elementos = Elemento::where('movimiento_id',$findMovimiento->id)->get();
                                 return view('cabeceras.agregarElemento')->with([
                                     'movimiento'  => $movimiento,
@@ -364,5 +394,23 @@ class CabeceraController extends Controller
             return null;
         }
     }
+
+    public function subirExcel(Request $request)
+    {
+        // Verifica si se ha enviado un archivo
+        if ($request->hasFile('archivo_excel')) {
+            $archivo = $request->file('archivo_excel');
+
+            // Guarda el archivo en tu sistema de archivos
+            $archivo->storeAs('archivos_excel', 'nombre_personalizado.xlsx'); // Cambia 'nombre_personalizado.xlsx' según tus necesidades
+
+            // Aquí puedes hacer cualquier procesamiento adicional con el archivo
+
+            return redirect()->back()->with('success', 'Archivo Excel subido exitosamente.');
+        } else {
+            return redirect()->back()->with('error', 'No se ha seleccionado ningún archivo.');
+        }
+    }
+    
 
 }
