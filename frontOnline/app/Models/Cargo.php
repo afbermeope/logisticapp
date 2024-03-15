@@ -9,7 +9,7 @@ class Cargo extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['nombre', 'estado'];
+    protected $fillable = ['nombre', 'evento_id', 'estado'];
 
     public function tarifas()
     {
@@ -19,6 +19,10 @@ class Cargo extends Model
     public function cabeceras()
     {
         return $this->hasMany(Cabecera::class);
+    }
+
+    public function evento(){
+        return $this->belongsTo(Evento::class);
     }
     
 }

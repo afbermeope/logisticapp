@@ -21,4 +21,9 @@ class Evento extends Model
         return $this->hasMany(Cabecera::class);
     }
 
+    public function cargos()
+    {
+        return $this->hasMany(Cargo::class);
+    }
+
 }

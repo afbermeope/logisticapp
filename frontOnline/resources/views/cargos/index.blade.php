@@ -25,7 +25,7 @@
         <div class="container-fluid">
         <!-- Main row -->
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <!-- general form elements -->
                     <div class="card card-secondary">
                     <div class="card-header">
@@ -39,6 +39,15 @@
                             <div class="form-group">
                                 <label for="nombre">Nombre</label>
                                 <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="evento_id">Evento</label>
+                                <select class=" select2" style="width: 100%;" name="evento_id" id="evento_id" required onChange="getZonas()">
+                                    <option value="" selected>Seleccione</option>
+                                    @foreach ($eventos as $evento)
+                                        <option value="{{$evento->id}}">{{$evento->nombre}}</option>
+                                    @endforeach
+                                </select>                            
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -59,6 +68,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
+                                        <th>Evento</th>
                                         <th>Editar</th>
                                     </tr>
                                 </thead>
@@ -66,6 +76,7 @@
                                     @foreach ($cargos as $cargo)
                                         <tr>
                                             <td>{{ $cargo->nombre }}</td>
+                                            <td>{{ $cargo->evento->nombre }}</td>
                                             <td>
                                                 <a href="/cargo/{{$cargo->id}}/edit" target="_blank">
                                                     <button class="btn btn-secondary" type="button">Editar</button>
@@ -99,6 +110,7 @@
 <script src="/AdminLTE/plugins/pdfmake/vfs_fonts.js"></script>
 <script src="/AdminLTE/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="/AdminLTE/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
 
 
 <script>
@@ -144,4 +156,10 @@
     });
   </script>
 
+<script>
+    $(function () {
+        //Initialize Select2 Elements
 
+        $('.select2').select2();
+    })
+</script>

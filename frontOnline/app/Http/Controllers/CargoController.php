@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cargo;
 use App\Models\Tarifa;
+use App\Models\Evento;
 use Illuminate\Http\Request;
 
 class CargoController extends Controller
@@ -17,9 +18,11 @@ class CargoController extends Controller
     {
         //
         $cargos = Cargo::all();
+        $eventos = Evento::all();
 
         return view('cargos.index')->with([
             'cargos'  => $cargos,
+            'eventos'  => $eventos,
             'message' => '',
             'error' => '',
         ]);
@@ -45,10 +48,12 @@ class CargoController extends Controller
     {
         //
         $nombre = $request->input('nombre');
+        $evento_id = $request->input('evento_id');
 
         $cargo = Cargo::create(
             [
                 'nombre' => $request->input('nombre'),
+                'evento_id' => $request->input('evento_id'),
                 'estado' => 'A'
             ]
         );
@@ -105,11 +110,13 @@ class CargoController extends Controller
     public function edit($id)
     {
         $cargo = Cargo::find($id);
+        $eventos = Evento::all();
 
         return view('cargos.update')->with([
             'message'  => "",
             'error'  => "",
             'cargo'  => $cargo,
+            'eventos'  => $eventos,
         ]);
     }
     /**
@@ -125,12 +132,15 @@ class CargoController extends Controller
         $cargo = Cargo::find($id);
         
         $cargo->nombre = $request->input('nombre_cargo');
+        $cargo->evento_id = $request->input('evento_id');
         $cargo->save();
         
         $cargos = Cargo::all();
+        $eventos = Evento::all();
 
         return view('cargos.index')->with([
             'cargos'  => $cargos,
+            'eventos'  => $eventos,
             'message' => 'Cargo editado correctamente',
             'error' => '',
         ]);

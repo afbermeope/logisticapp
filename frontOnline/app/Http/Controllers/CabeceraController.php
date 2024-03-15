@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
 use App\Models\Evento;
 use App\Models\Cabecera;
@@ -226,8 +227,8 @@ class CabeceraController extends Controller
             //no debe haber un detalleturno con el dia de hoy
 
             $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
-            $fechaServidor = Carbon::parse("2024/03/16");
-            // $fechaServidor = Carbon::parse($fechaServidor);
+            // $fechaServidor = Carbon::parse("2024/03/16");
+            $fechaServidor = Carbon::parse($fechaServidor);
 
             $fechaInicioEvento = Carbon::parse($cabecera->evento->fecha_inicio);
             $fechaFinEvento = Carbon::parse($cabecera->evento->fecha_fin);
@@ -401,16 +402,223 @@ class CabeceraController extends Controller
         if ($request->hasFile('archivo_excel')) {
             $archivo = $request->file('archivo_excel');
 
-            // Guarda el archivo en tu sistema de archivos
-            $archivo->storeAs('archivos_excel', 'nombre_personalizado.xlsx'); // Cambia 'nombre_personalizado.xlsx' según tus necesidades
+            // Crea un lector de archivos Excel
+            $reader = ReaderEntityFactory::createXLSXReader();
+            $reader->open($archivo->getPathname());
 
-            // Aquí puedes hacer cualquier procesamiento adicional con el archivo
+            // Itera sobre las filas y crea objetos a partir de las columnas
+            $objetos = [];
+            foreach ($reader->getSheetIterator() as $sheet) {
+                foreach ($sheet->getRowIterator() as $fila) {
+                    // Suponiendo que la primera fila del archivo Excel contiene los nombres de las columnas
+                    $datos = $fila->toArray();
 
-            return redirect()->back()->with('success', 'Archivo Excel subido exitosamente.');
+                    // Crea un objeto personalizado con los datos de la fila
+                    $objeto = new \stdClass();
+                    $objeto->cedula = $datos[0]; // Cedula
+                    $objeto->nombre = $datos[1]; // Nombre completo
+                    $objeto->telefono = $datos[2]; // Teléfono
+                    $objeto->evento = $datos[3]; // Evento
+                    $objeto->fecha_inicio = $datos[4]; // Fecha inicio
+                    $objeto->fecha_fin = $datos[5]; // Fecha fin
+                    $objeto->zona = $datos[6]; // Zona
+                    $objeto->turno = $datos[7]; // Turno
+                    $objeto->horario = $datos[8]; // Horario
+                    $objeto->cargo = $datos[9]; // Cargo
+                    
+                    // dd( $objeto->fecha_inicio);
+
+                    //Crear evento
+                    //Validamos si no existe ese evento
+
+                    $evento = Evento::where('nombre', $objeto->evento)
+                    ->where('fecha_inicio', $objeto->fecha_inicio)
+                    ->where('fecha_fin', $objeto->fecha_fin)
+                    ->first();
+
+                    if (!$evento) {
+                        $fechaInicioCarbon = Carbon::parse($objeto->fecha_inicio);
+                        $fechaFinCarbon = Carbon::parse($objeto->fecha_fin);
+                        $diferenciaEnDias = $fechaInicioCarbon->diffInDays($fechaFinCarbon) + 1;
+
+                        // Crear nuevo evento
+                        $nuevoEvento = Evento::create([
+                            'nombre' => $objeto->evento,
+                            'fecha_inicio' => $objeto->fecha_inicio,
+                            'fecha_fin' => $objeto->fecha_fin,
+                            'dias' => $diferenciaEnDias,
+                            'estado' => 'A'
+                        ]);
+
+                        //Crear la zona
+                        //Validamos si no existe esa zona con ese evento
+                        $zona = Zona::where('nombre', $objeto->zona)
+                        ->first();
+
+                        if (!$zona) {
+                            $nuevaZona = Zona::create([
+                                'nombre' => $objeto->zona,
+                                'evento_id' => $nuevoEvento->id,
+                                'estado' => 'A'
+                            ]);
+                        }
+
+                        $cargo = Cargo::where('nombre', $objeto->cargo)
+                        ->where('evento_id', $nuevoEvento->id)
+                        ->first();    
+
+                        if (!$cargo) {
+                            // Crear nuevo cargo
+                            $nuevoCargo = Cargo::create([
+                                'nombre' => $objeto->cargo,
+                                'evento_id' => $nuevoEvento->id,
+                                'estado' => 'A'
+                            ]);
+    
+                            //Crear la tarifa
+                            $nuevaTarifa = Tarifa::create([
+                                'valor' => $objeto->turno,
+                                'hora' => 1,
+                                'cargo_id' => $nuevoCargo->id,
+                                'estado' => 'A'
+                            ]);    
+                        }
+
+                    }else{
+                        //Crear la zona
+                        //Validamos si no existe esa zona con ese evento
+                        $zona = Zona::where('nombre', $objeto->zona)
+                        ->first();
+
+                        if (!$zona) {
+                            $nuevaZona = Zona::create([
+                                'nombre' => $objeto->zona,
+                                'evento_id' => $evento->id,
+                                'estado' => 'A'
+                            ]);
+    
+                        }
+                        
+                        //Crear el cargo
+                        //Validamos si no existe ese evento
+
+                        $cargo = Cargo::where('nombre', $objeto->cargo)
+                        ->where('evento_id', $evento->id)
+                        ->first();    
+                        
+                        if (!$cargo) {
+                            // Crear nuevo cargo
+                            $nuevoCargo = Cargo::create([
+                                'nombre' => $objeto->cargo,
+                                'evento_id' => $evento->id,
+                                'estado' => 'A'
+                            ]);
+    
+                            //Crear la tarifa
+                            $nuevaTarifa = Tarifa::create([
+                                'valor' => $objeto->turno,
+                                'hora' => 1,
+                                'cargo_id' => $nuevoCargo->id,
+                                'estado' => 'A'
+                            ]);    
+                        }
+                    }
+
+                    $persona = Persona::where('cedula', $objeto->cedula)
+                    ->where('nombre', $objeto->nombre)
+                    ->first();    
+
+                    if (!$persona) {
+                        $nuevaPersona = Persona::create([
+                            'nombre' => $objeto->nombre,
+                            'cedula' => str_pad($objeto->cedula, 10, '0', STR_PAD_LEFT),
+                            'telefono' => $objeto->telefono,
+                            'estado' => 'A'
+                        ]);
+                    }
+
+                    //Crear cabecera
+                    //Validar que no haya una cabecera exacta
+
+                   // Ejecutar la consulta utilizando Eloquent
+                    $primerResultado = Cabecera::select('cabeceras.*')
+                        ->join('eventos as e', 'cabeceras.evento_id', '=', 'e.id')
+                        ->join('zonas as z', 'cabeceras.zona_id', '=', 'z.id')
+                        ->join('personas as p', 'cabeceras.persona_id', '=', 'p.id')
+                        ->join('cargos as ca', 'cabeceras.cargo_id', '=', 'ca.id')
+                        ->join('tarifas as t', 'cabeceras.tarifa_id', '=', 't.id')
+                        ->where('e.nombre', $objeto->evento)
+                        ->where('z.nombre', $objeto->zona)
+                        ->where('p.nombre', $objeto->nombre)
+                        ->where('p.cedula', $objeto->cedula)
+                        ->where('ca.nombre', $objeto->cargo)
+                        ->where('t.valor', $objeto->turno)
+                        ->where('cabeceras.horario', $objeto->horario)
+                        ->first(); // Obtener solo el primer registro
+                    
+                    // Verificar si se encontró un resultado
+                    if (!$primerResultado) {
+                        //TODO: esto puede hacerse mejor pero estoy mamao
+                        $p= Persona::where('cedula', $objeto->cedula)
+                        ->where('nombre', $objeto->nombre)
+                        ->first();    
+
+                        $z = Zona::where('nombre', $objeto->zona)
+                        ->first();
+
+                        $e = Evento::where('nombre', $objeto->evento)
+                        ->where('fecha_inicio', $objeto->fecha_inicio)
+                        ->where('fecha_fin', $objeto->fecha_fin)
+                        ->first();
+
+                        $c = Cargo::where('nombre', $objeto->cargo)
+                        ->where('evento_id', $e->id)
+                        ->first();  
+
+                        $t = Tarifa::
+                        where('cargo_id', $c->id)
+                        ->first();  
+                        
+                        $cabecera = Cabecera::create([
+                            "persona_id" => $p->id,
+                            "zona_id" => $z->id,
+                            "evento_id" => $e->id,
+                            "cargo_id" => $c->id,
+                            "tarifa_id" => $t->id,
+                            "horario" => $objeto->horario ,
+                            "cantidad_horas" => '1',
+                            "estado" => "A",
+                        ]);
+                    } 
+                    // Agrega el objeto al arreglo
+                    $objetos[] = $objeto;
+                }
+            }
+
+            // Cierra el lector de archivos Excel
+            $reader->close();
+
+            // Aquí puedes hacer lo que quieras con los objetos, como pasarlos a una vista
+            // dd($objetos);
+
+            $cabeceras = Cabecera::where('estado','A')->get();
+            $eventos = Evento::where('estado','A')->get();
+            $personas = Persona::where('estado','A')->get();
+            $cargos = Cargo::where('estado','A')->get();
+    
+            return view('cabeceras.index')->with([
+                'cabeceras'  => $cabeceras,
+                'eventos'  => $eventos,
+                'personas'  => $personas,
+                'cargos'  => $cargos,
+                'message'  => "Subido correctamente",
+                'error'  => "",
+            ]);
+
         } else {
             return redirect()->back()->with('error', 'No se ha seleccionado ningún archivo.');
         }
     }
-    
+ 
 
 }

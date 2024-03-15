@@ -36,7 +36,7 @@
         <div class="container-fluid">
         <!-- Main row -->
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <!-- general form elements -->
                     <div class="card card-secondary">
                     <div class="card-header">
@@ -48,10 +48,21 @@
                         @csrf
                         <input name="_method" type="hidden" value="PATCH">
                         <div class="card-body">
-                            <div class="form-group">
+                            <div class="form-group col-md-4">
                                 <label for="nombre_cargo">Nombre</label>
                                 <input type="text" class="form-control" id="nombre_cargo" name="nombre_cargo" placeholder="Ingrese el nombre" required value="{{$cargo->nombre}}">
                             </div>
+                            <div class="form-group col-md-4">
+                                <label for="evento_id">Evento</label>
+                                <select class="select2" style="width: 100%;" name="evento_id" id="evento_id" required onChange="getZonas()">
+                                    <option value="" selected>Seleccione</option>
+                                    @foreach ($eventos as $evento)
+                                        <option value="{{ $evento->id }}" {{ $evento->id == $cargo->evento->id ? 'selected' : '' }}>
+                                            {{ $evento->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>    
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
@@ -125,6 +136,13 @@
     </section>
 </div>
 
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+
+        $('.select2').select2();
+    })
+</script>
 <!-- jQuery -->
 <script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
@@ -149,6 +167,7 @@
 <script src="/AdminLTE/plugins/pdfmake/vfs_fonts.js"></script>
 <script src="/AdminLTE/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="/AdminLTE/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
 
 
 <script type="text/javascript">

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('estado');
+            $table->integer('evento_id');
             $table->timestamps();
         });
     }
