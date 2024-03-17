@@ -128,8 +128,7 @@
               <li class="nav-item">
                 <a href="/cabecera" class="nav-link">
                   <i class="nav-icon fas fa-address-book"></i>
-                  <p>
-                      Personal/Evento
+                  <p>Turnos
                   </p>
                 </a>
               </li>
