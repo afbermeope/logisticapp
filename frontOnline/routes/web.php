@@ -11,6 +11,7 @@ use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\CabeceraController;
 use App\Http\Controllers\ElementoController;
 use App\Http\Controllers\MovimientoController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ use App\Http\Controllers\MovimientoController;
 Auth::routes();
 Route::get('/registrarMovimiento/{evento_id}', [CabeceraController::class, 'registrarMovimientoView']);
 Route::get('/', [CabeceraController::class, 'seleccionarEvento']);
+Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::post('/cabecera/agregarMovimiento/', [CabeceraController::class, 'agregarMovimiento']);
 Route::post('/cabecera/consultarCabeceras/', [CabeceraController::class, 'consultarCabeceras']);
