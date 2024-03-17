@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Seleccione el turno a registrar</h5>
+    <h5 class="modal-title" id="exampleModalLabel">Seleccione el turno a registrar de {{$cabecera->persona->nombre}}</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -8,7 +8,7 @@
     @foreach($cabeceras as $cabecera)
         <div class="form-check">
             <input class="form-check-input" type="radio" name="cabecera_id" value="{{$cabecera->id}}" onclick="guardarValor(this)">
-            <label class="form-check-label" for="checkboxGorro">{{$cabecera->horario}}</label>
+            <label class="form-check-label" for="checkboxGorro">{{$cabecera->horario}} - {{$cabecera->zona->nombre}} - {{$cabecera->cargo->nombre}}</label>
         </div>
     @endforeach
 </div>
