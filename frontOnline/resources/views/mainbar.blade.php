@@ -148,6 +148,14 @@
                   </p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="/movimiento" class="nav-link">
+                  <i class="nav-icon fa fa-database"></i>
+                  <p>
+                    Bases de datos
+                  </p>
+                </a>
+              </li>
            
             <li class="nav-item">
               <a href="/account-sign-out" class="nav-link">

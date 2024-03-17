@@ -185,7 +185,8 @@
 <script>
     $(function () {
       $("#cabecera-table").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "responsive": true, "autoWidth": false,
+        "lengthMenu": [ 25, 50, 75, "All" ],
         "buttons": [
             {"extend": 'csvHtml5', 
             "exportOptions": {

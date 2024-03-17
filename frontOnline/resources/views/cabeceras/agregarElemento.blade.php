@@ -70,5 +70,4 @@
     function cambiarValorTextoOtro(nombre) {
         document.getElementById('textoOtro').value = nombre;
     }
-    
 </script>
