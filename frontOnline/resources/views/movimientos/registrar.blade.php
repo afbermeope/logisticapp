@@ -94,29 +94,52 @@
   </script>
 
 <script>
-    function escanearCodigoBarras() {
-      var codigoBarras = document.getElementById('codigoBarrasInput').value;
-      var evento_id = {{$evento_id}};
-      let _token = $('meta[name="csrf-token"]').attr('content');
+  function escanearCodigoBarras() {
+    var codigoBarras = document.getElementById('codigoBarrasInput').value;
+    var evento_id = {{$evento_id}};
+    let _token = $('meta[name="csrf-token"]').attr('content');
 
-      $.ajax({
-        url: "{{URL::to('/cabecera/agregarMovimiento/')}}",
-        type:"POST",
-        data:{
-          evento_id:evento_id,
-          codigoBarras:codigoBarras,
-          _token: _token
-        },
-        success:function(response){
-            // alert(response);
-            if(response) {
-                $("#result").html(response); 
-            }
-          $('#codigoBarrasModal').modal('show');
-        },
-      });
-  };
+    $.ajax({
+      url: "{{URL::to('/cabecera/consultarCabeceras/')}}",
+      type:"POST",
+      data:{
+        evento_id:evento_id,
+        codigoBarras:codigoBarras,
+        _token: _token
+      },
+      success:function(response){
+          // alert(response);
+          if(response) {
+              $("#result").html(response); 
+          }
+        $('#codigoBarrasModal').modal('show');
+      },
+    });
+};
 </script>
+
+<script>
+  function agregarMovimiento($cabeceraId) {
+    let _token = $('meta[name="csrf-token"]').attr('content');
+
+    $.ajax({
+      url: "{{URL::to('/cabecera/agregarMovimiento/')}}",
+      type:"POST",
+      data:{
+        cabeceraId:cabeceraId,
+        _token: _token
+      },
+      success:function(response){
+          // alert(response);
+          if(response) {
+              $("#result").html(response); 
+          }
+        $('#codigoBarrasModal').modal('show');
+      },
+    });
+};
+</script>
+
 
 <script>
     function registrarElemento() {

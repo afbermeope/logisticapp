@@ -1,5 +1,5 @@
 
-@if($elementos ==  null )
+@if($movimiento->descripcion == 'checkin' )
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Registrar ingreso de elementos</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -28,6 +28,9 @@
         </button>
     </div>
     <div class="modal-body">
+    @if($elementos->count() == 0)
+        Esta persona no registró ningun elemento, pulse cerrar para salir
+    @endif
     @foreach ($elementos as $elemento)
         <input type="hidden" name="movimiento_id" id="movimiento_id" value="{{$movimiento->id}}">
         @if($elemento->nombre == "gorro")
@@ -50,6 +53,8 @@
 @endif
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" onclick="registrarElemento()">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="limpiarCacheYRecargar()">Cerrar</button>
+        @if($elementos == null)
+            <button type="button" class="btn btn-primary" onclick="registrarElemento()">Guardar</button>
+        @endif
     </div>

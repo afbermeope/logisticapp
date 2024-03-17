@@ -29,6 +29,7 @@ Route::get('/registrarMovimiento/{evento_id}', [CabeceraController::class, 'regi
 Route::get('/', [CabeceraController::class, 'seleccionarEvento']);
 
 Route::post('/cabecera/agregarMovimiento/', [CabeceraController::class, 'agregarMovimiento']);
+Route::post('/cabecera/consultarCabeceras/', [CabeceraController::class, 'consultarCabeceras']);
 
 
 Route::group(['middleware' => 'auth'], function () {

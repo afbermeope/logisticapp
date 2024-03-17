@@ -41,7 +41,7 @@
                                 <select class=" select2" style="width: 100%;" name="persona_id" id="persona_id" required>
                                     <option value="" selected>Seleccione</option>
                                     @foreach ($personas as $persona)
-                                        <option value="{{$persona->id}}">{{$persona->nombre}}</option>
+                                        <option value="{{$persona->id}}">{{$persona->nombre}} - {{$persona->cedula}}</option>
                                     @endforeach
                                 </select>    
                             </div>
@@ -123,6 +123,7 @@
                                         <th>Persona</th>
                                         <th>Evento</th>
                                         <th>Zona</th>
+                                        <th>Horario</th>
                                         <th>Cargo</th>
                                         <th>Valor tarifa</th>
                                         <th>Valor hora</th>
@@ -132,9 +133,10 @@
                                 <tbody>
                                     @foreach ($cabeceras as $cabecera)
                                         <tr>
-                                            <td>{{ $cabecera->persona->nombre }}</td>
+                                            <td>{{ $cabecera->persona->nombre }} - {{ $cabecera->persona->cedula }}</td>
                                             <td>{{ $cabecera->zona->evento->nombre }}</td>
                                             <td>{{ $cabecera->zona->nombre }}</td>
+                                            <td>{{ $cabecera->horario }}</td>
                                             <td>{{ $cabecera->tarifa->cargo->nombre }}</td>
                                             <td>{{ $cabecera->tarifa->valor }}</td>
                                             <td>{{ $cabecera->tarifa->hora }}</td>

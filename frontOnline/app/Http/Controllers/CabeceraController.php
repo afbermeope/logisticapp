@@ -200,24 +200,10 @@ class CabeceraController extends Controller
 
     public function agregarMovimiento(Request $request)
     {
-        $cedula = $request->get('codigoBarras');
-        $evento_id = $request->get('evento_id');        
+        $cabecera_id = $request->get('cabeceraId');
         try {
-            //remuevo el resto de la carreta
-            $cedula = substr($cedula, 0, 10);
-            $persona = Persona::where('cedula', $cedula)->first();
-            
-            if(!$persona){
-                return view('cabeceras.elementoRespuesta')->with([
-                    'mensaje'  => "Usuario no existe en la base de datos: ",
-                ]);
-            }
 
-            $cabecera = Cabecera::where('evento_id', '=', $evento_id)
-            ->where('persona_id', '=', $persona->id)
-            ->where('estado', '=', 'A')
-            ->first();
-
+            $cabecera = Cabecera::find($cabecera_id);
             // if(!$cabecera){
             //     return view('cabeceras.elementoRespuesta')->with([
             //         'mensaje'  => "Usuario no tiene turnos asignados: ",
@@ -225,7 +211,6 @@ class CabeceraController extends Controller
             // }
 
             //no debe haber un detalleturno con el dia de hoy
-
             $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
             // $fechaServidor = Carbon::parse("2024/03/16");
             $fechaServidor = Carbon::parse($fechaServidor);
@@ -241,7 +226,7 @@ class CabeceraController extends Controller
                 }
             }
 
-            $detalleTurnoSinChekout = $this->tieneCheckinHuerfano($persona->id);
+            $detalleTurnoSinChekout = $this->tieneCheckinHuerfano($cabecera->persona->id);
 
             if($detalleTurnoSinChekout != null){
                 $movimiento = Movimiento::create([
@@ -255,7 +240,7 @@ class CabeceraController extends Controller
 
                 return view('cabeceras.agregarElemento')->with([
                     'movimiento'  => $movimiento,
-                    'persona'  => $persona,
+                    'persona'  => $cabecera->persona,
                     'elementos'  => $detalleTurnoSinChekout->movimientos[0]->elementos,
                     'message'  => "",
                     'error'  => "",
@@ -264,7 +249,7 @@ class CabeceraController extends Controller
 
 
             $cabecera = Cabecera::where('zona_id', '=', $cabecera->zona->id)
-            ->where('persona_id', '=', $persona->id)
+            ->where('persona_id', '=', $cabecera->persona->id)
             ->where('estado', '=', 'A')
             ->first();
 
@@ -302,7 +287,7 @@ class CabeceraController extends Controller
 
                         return view('cabeceras.agregarElemento')->with([
                             'movimiento'  => $movimiento,
-                            'persona'  => $persona,
+                            'persona'  => $cabecera->persona,
                             'elementos'  => null,
                             'message'  => "",
                             'error'  => "",
@@ -340,7 +325,7 @@ class CabeceraController extends Controller
                                 $elementos = Elemento::where('movimiento_id',$findMovimiento->id)->get();
                                 return view('cabeceras.agregarElemento')->with([
                                     'movimiento'  => $movimiento,
-                                    'persona'  => $persona,
+                                    'persona'  => $cabecera->persona,
                                     'elementos'  => $elementos,
                                     'message'  => "",
                                     'error'  => "",
@@ -619,6 +604,187 @@ class CabeceraController extends Controller
             return redirect()->back()->with('error', 'No se ha seleccionado ningún archivo.');
         }
     }
+
+    public function consultarCabeceras(Request $request)
+    {
+        $evento_id = $request->get('evento_id');
+        $cedula = $request->input('codigoBarras');
+
+        $cedula = substr($cedula, 0, 10);
+        $persona = Persona::where('cedula', $cedula)->first();
+        
+        if(!$persona){
+            return view('cabeceras.elementoRespuesta')->with([
+                'mensaje'  => "Usuario no existe en la base de datos: ",
+            ]);
+        }
+
+        $cabeceras = Cabecera::where('evento_id', '=', $evento_id)
+        ->where('persona_id', '=', $persona->id)
+        ->where('estado', '=', 'A')
+        ->get();
+
+        if($cabeceras->count() == 0){
+            return view('cabeceras.elementoRespuesta')->with([
+                'mensaje'  => "Persona no encontrada en el evento"
+            ]);
+        }
+
+        if($cabeceras->count() >= 1){
+            return view('cabeceras.seleccionCabeceras')->with([
+                'cabeceras'  => $cabeceras,
+                'message'  => "",
+                'error'  => "",
+            ]);
+        }
+        else {
+            return $this->registrarMovimiento($cabeceras[0]);
+        }
+           
+
+    }
+
+    public function registrarMovimiento($cabecera)
+    {
+        try{
+            //no debe haber un detalleturno con el dia de hoy
+
+            $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
+            // $fechaServidor = Carbon::parse("2024/03/16");
+            $fechaServidor = Carbon::parse($fechaServidor);
+
+            $fechaInicioEvento = Carbon::parse($cabecera->evento->fecha_inicio);
+            $fechaFinEvento = Carbon::parse($cabecera->evento->fecha_fin);
+
+            foreach($cabecera->detalleTurnos as $detalleTurno){
+                if ($fechaInicioEvento->diffInDays($fechaServidor)+1 == $detalleTurno->numero_dia && $detalleTurno->estado != "A"){
+                    return view('cabeceras.elementoRespuesta')->with([
+                        'mensaje'  => "Turno del dia cumplido",
+                    ]);
+                }
+            }
+
+            $detalleTurnoSinChekout = $this->tieneCheckinHuerfano($persona->id);
+
+            if($detalleTurnoSinChekout != null){
+                $movimiento = Movimiento::create([
+                    "descripcion" => 'checkout',
+                    "estado" => 'A',
+                    "detalle_turno_id" => $detalleTurnoSinChekout->id,
+                ]);
+
+                $detalleTurnoSinChekout->estado = "I";
+                $detalleTurnoSinChekout->save();
+
+                return view('cabeceras.agregarElemento')->with([
+                    'movimiento'  => $movimiento,
+                    'persona'  => $persona,
+                    'elementos'  => $detalleTurnoSinChekout->movimientos[0]->elementos,
+                    'message'  => "",
+                    'error'  => "",
+                ]);
+            }
+
+
+            $cabecera = Cabecera::where('zona_id', '=', $cabecera->zona->id)
+            ->where('persona_id', '=', $cabecera->persona->id)
+            ->where('estado', '=', 'A')
+            ->first();
+
+            if ($cabecera === null) {
+                return view('cabeceras.elementoRespuesta')->with([
+                    'mensaje'  => "Persona no encontrada en el evento: ".$cabecera->evento->nombre,
+                ]);
+            } else {
+    
+                // Verifica si la fecha del servidor está dentro del rango del evento
+                if ($fechaServidor->between($fechaInicioEvento, $fechaFinEvento) || ($fechaInicioEvento->toDateString() == $fechaServidor->toDateString()) ) {
+                    // Estamos dentro del evento
+                    $diasTranscurridos = $fechaInicioEvento->diffInDays($fechaServidor)+1;
+                    
+                    //Validar si ya hay un detalle turno con este dia
+                    $findDetalleTurno = DetalleTurno::where('estado','A')
+                    ->where('cabecera_id', $cabecera->id)
+                    ->where('numero_dia', $diasTranscurridos)
+                    ->first();
+                    
+                    if($findDetalleTurno === null){
+                        //si no crearlo
+                        $detalleTurno = DetalleTurno::create([
+                            'estado' => 'A',
+                            'cabecera_id' => $cabecera->id,
+                            'numero_dia' => $diasTranscurridos
+                        ]);
+
+                        //Crear primer movimiento
+                        $movimiento = Movimiento::create([
+                            "descripcion" => 'checkin',
+                            "estado" => 'A',
+                            "detalle_turno_id" => $detalleTurno->id,
+                        ]);
+
+                        return view('cabeceras.agregarElemento')->with([
+                            'movimiento'  => $movimiento,
+                            'persona'  => $cabecera->persona,
+                            'elementos'  => null,
+                            'message'  => "",
+                            'error'  => "",
+                        ]);
+
+                    }else{
+                        //validar que exista checkin
+                        $findMovimiento = Movimiento::where('descripcion', 'checkin')
+                        ->where('estado', 'A')
+                        ->where('detalle_turno_id', $findDetalleTurno->id)
+                        ->first();
+
+                        if($findMovimiento != null ){
+
+                            //validar que exista checkout
+                            $movimientoCheckout = Movimiento::where('descripcion', 'checkout')
+                            ->where('estado', 'A')
+                            ->where('detalle_turno_id', $findDetalleTurno->id)
+                            ->first();
+
+                            if($movimientoCheckout != null){
+                                return view('cabeceras.elementoRespuesta')->with([
+                                    'mensaje'  => "Esta persona ya realizó los movimientos del dia (checkin-checkout)"
+                                ]);
+                            }else{
+                                $movimiento = Movimiento::create([
+                                    "descripcion" => 'checkout',
+                                    "estado" => 'A',
+                                    "detalle_turno_id" => $findDetalleTurno->id,
+                                ]);
+
+                                $findDetalleTurno->estado = "I";
+                                $findDetalleTurno->save();
+                                
+                                $elementos = Elemento::where('movimiento_id',$findMovimiento->id)->get();
+                                return view('cabeceras.agregarElemento')->with([
+                                    'movimiento'  => $movimiento,
+                                    'persona'  => $cabecera->persona,
+                                    'elementos'  => $elementos,
+                                    'message'  => "",
+                                    'error'  => "",
+                                ]);
+                            }
+                        }
+                    }
+                    
+                } else {
+                    return view('cabeceras.elementoRespuesta')->with([
+                        'mensaje'  => "No estamos dentro del evento. Hoy es " . $fechaServidor->toDateString(). " y el evento es hasta ".$fechaFinEvento->toDateString()
+                    ]);
+                }   
+            }
+
+        } catch (\Throwable $th) {
+            return $th;
+        }
+       
+    }
+    
  
 
 }
