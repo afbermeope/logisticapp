@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Seleccione el turno a registrar de {{$cabecera->persona->nombre}}</h5>
+    <h5 class="modal-title" id="exampleModalLabel">Seleccione el turno a registrar de {{$persona->nombre}}</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -13,7 +13,7 @@
     @endforeach
 </div>
 <div class="modal-footer">
-    <button type="button" id="botonSiguiente" class="btn btn-primary" onclick="agregarMovimiento(cabeceraId )" disabled>Siguiente</button>
+    <button type="button" id="botonSiguiente" class="btn btn-primary" onclick="agregarMovimiento(cabeceraId)" disabled>Siguiente</button>
 </div>
 
 <script>

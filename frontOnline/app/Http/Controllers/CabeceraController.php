@@ -633,6 +633,7 @@ class CabeceraController extends Controller
         if($cabeceras->count() >= 1){
             return view('cabeceras.seleccionCabeceras')->with([
                 'cabeceras'  => $cabeceras,
+                'persona'  => $persona,
                 'message'  => "",
                 'error'  => "",
             ]);
