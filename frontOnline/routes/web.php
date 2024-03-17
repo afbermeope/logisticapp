@@ -30,6 +30,7 @@ Route::get('/', [CabeceraController::class, 'seleccionarEvento']);
 
 Route::post('/cabecera/agregarMovimiento/', [CabeceraController::class, 'agregarMovimiento']);
 Route::post('/cabecera/consultarCabeceras/', [CabeceraController::class, 'consultarCabeceras']);
+Route::resource('elemento', ElementoController::class);
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -42,7 +43,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('detalleTurno', DetalleTurnoController::class);
     Route::resource('movimiento', MovimientoController::class);
     Route::resource('cabecera', CabeceraController::class);
-    Route::resource('elemento', ElementoController::class);
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/eventos/{id}/agregarZona', [EventoController::class, 'agregarZonaView']);
