@@ -133,13 +133,13 @@
                                 <tbody>
                                     @foreach ($cabeceras as $cabecera)
                                         <tr>
-                                            <td>{{ $cabecera->persona->nombre }} - {{ $cabecera->persona->cedula }}</td>
-                                            <td>{{ $cabecera->zona->evento->nombre }}</td>
-                                            <td>{{ $cabecera->zona->nombre }}</td>
-                                            <td>{{ $cabecera->horario }}</td>
-                                            <td>{{ $cabecera->tarifa->cargo->nombre }}</td>
-                                            <td>{{ $cabecera->tarifa->valor }}</td>
-                                            <td>{{ $cabecera->tarifa->hora }}</td>
+                                            <td>{{ $cabecera->persona->nombre ?? '' }} - {{ $cabecera->persona->cedula ?? ''}}</td>
+                                            <td>{{ $cabecera->zona->evento->nombre ?? ''}}</td>
+                                            <td>{{ $cabecera->zona->nombre ?? ''}}</td>
+                                            <td>{{ $cabecera->horario ?? ''}}</td>
+                                            <td>{{ $cabecera->tarifa->cargo->nombre ?? ''}}</td>
+                                            <td>{{ $cabecera->tarifa->valor ?? ''}}</td>
+                                            <td>{{ $cabecera->tarifa->hora ?? ''}}</td>
                                             <td>
                                                 <a href="/cabecera/{{$cabecera->id}}/edit" target="_blank">
                                                     <button class="btn btn-secondary" type="button">Editar</button>
