@@ -20,6 +20,12 @@
             <label for="textoOtro">Especifique (Otro):</label>
             <input type="text" class="form-control" id="textoOtro" placeholder="Especifique...">
         </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="limpiarCacheYRecargar()">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="registrarElemento()">Guardar</button>
+    </div>
+        
 @else
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Registrar salida de elementos</h5>
@@ -50,7 +56,6 @@
             </div>
         @endif
     @endforeach
-@endif
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="limpiarCacheYRecargar()">Cerrar</button>
@@ -58,3 +63,4 @@
             <button type="button" class="btn btn-primary" onclick="registrarElemento()">Guardar</button>
         @endif
     </div>
+@endif
