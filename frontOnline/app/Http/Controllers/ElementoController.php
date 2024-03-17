@@ -40,7 +40,8 @@ class ElementoController extends Controller
         $gorro = $request->get('checkboxGorro');
         $checkOtro = $request->get('checkboxOtro');
         $otro = $request->get('textoOtro');
-        $movimiento_id = $request->get('movimiento_id');
+        $movimiento_id = $request->get('movimiento_id');        
+
 
         try {
             // Validar cada parámetro individualmente
@@ -73,7 +74,7 @@ class ElementoController extends Controller
 
             if ($checkOtro == "true") {
                 Elemento::create([
-                    'nombre' => 'otro',
+                    'nombre' => $otro,
                     'estado' => 'A',
                     'movimiento_id' => $movimiento_id,
                 ]);

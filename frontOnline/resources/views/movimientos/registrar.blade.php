@@ -159,7 +159,7 @@
             codigoBarras: codigoBarras ? codigoBarras.checked : false,
             checkboxGorro: checkboxGorro ? checkboxGorro.checked : false,
             checkboxChaleco: checkboxChaleco ? checkboxChaleco.checked : false,
-            checkboxOtro: checkboxOtro ? checkboxOtro.checked : null,
+            checkboxOtro: checkboxOtro ? checkboxOtro.checked : false,
             textoOtro: textoOtro ? textoOtro.value : "",
             _token: _token
         },

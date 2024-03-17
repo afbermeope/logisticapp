@@ -38,6 +38,7 @@
         Esta persona no registró ningun elemento, pulse cerrar para salir
     @endif
     @foreach ($elementos as $elemento)
+        <input type="hidden" name="textoOtro" id="textoOtro" value="">
         <input type="hidden" name="movimiento_id" id="movimiento_id" value="{{$movimiento->id}}">
         @if($elemento->nombre == "gorro")
             <div class="form-check">
@@ -51,7 +52,7 @@
             </div>
         @elseif($elemento->nombre != null)
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="checkboxOtro" required>
+                <input class="form-check-input" type="checkbox" value="" id="checkboxOtro" onchange="cambiarValorTextoOtro('{{$elemento->nombre}}')"required>
                 <label class="form-check-label" for="checkboxOtro">{{$elemento->nombre}}</label>
             </div>
         @endif
@@ -64,3 +65,10 @@
         @endif
     </div>
 @endif
+
+<script>
+    function cambiarValorTextoOtro(nombre) {
+        document.getElementById('textoOtro').value = nombre;
+    }
+    
+</script>
