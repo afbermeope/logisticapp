@@ -54,7 +54,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="limpiarCacheYRecargar()">Cerrar</button>
-        @if($elementos == null)
+        @if($elementos->count() >= 1)
             <button type="button" class="btn btn-primary" onclick="registrarElemento()">Guardar</button>
         @endif
     </div>
