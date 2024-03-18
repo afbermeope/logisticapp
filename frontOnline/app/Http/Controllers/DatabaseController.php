@@ -13,6 +13,8 @@ use App\Models\Elemento;
 use App\Models\Tarifa;
 use App\Models\Alimento;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
 use Carbon\Carbon;
 
 
@@ -267,5 +269,7 @@ class DatabaseController extends Controller
 
         return response()->json($data);
     }
+
+    
 
 }
