@@ -54,7 +54,7 @@ class DatabaseController extends Controller
 
     public function bajarInformacion(){
         // Realiza una solicitud GET a la API
-        $response = Http::get('https://api.example.com/data');
+        $response = Http::get('https://miarmadillo.com/public/api/db/subirInformac');
 
         // Verifica si la solicitud fue exitosa (código de estado 200)
         if ($response->successful()) {
