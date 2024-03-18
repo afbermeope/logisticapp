@@ -25,7 +25,7 @@
         <div class="container-fluid">
         <!-- Main row -->
             <div class="row">
-              <div class="col-lg-3 col-9">
+              <div class="col-6">
                 <!-- small box -->
                 <div class="small-box bg-success">
                   <div class="inner">    
@@ -38,7 +38,7 @@
                   <a onclick="confirmarBajada()" class="small-box-footer">Continuar <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
               </div>
-              <div class="col-lg-3 col-9">
+              <div class="col-6">
                 <!-- small box -->
                 <div class="small-box bg-warning">
                   <div class="inner">
