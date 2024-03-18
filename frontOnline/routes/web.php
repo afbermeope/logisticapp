@@ -11,6 +11,7 @@ use App\Http\Controllers\TarifaController;
 use App\Http\Controllers\CabeceraController;
 use App\Http\Controllers\ElementoController;
 use App\Http\Controllers\MovimientoController;
+use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\Auth\LoginController;
 
 /*
@@ -26,9 +27,10 @@ use App\Http\Controllers\Auth\LoginController;
 
 
 Auth::routes();
-Route::get('/registrarMovimiento/{evento_id}', [CabeceraController::class, 'registrarMovimientoView']);
 Route::get('/', [CabeceraController::class, 'seleccionarEvento']);
 Route::get('/logout', [LoginController::class, 'logout']);
+Route::get('/registrarMovimiento/{evento_id}', [CabeceraController::class, 'registrarMovimientoView']);
+
 
 Route::post('/cabecera/agregarMovimiento/', [CabeceraController::class, 'agregarMovimiento']);
 Route::post('/cabecera/consultarCabeceras/', [CabeceraController::class, 'consultarCabeceras']);
@@ -51,6 +53,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/cargos/{id}/agregarTarifa', [CargoController::class, 'agregarTarifaView']);
     Route::get('/evento/getZonas/{evento_id}', [EventoController::class, 'getZonas']);
     Route::get('/cargo/getTarifas/{cargo_id}', [CargoController::class, 'getTarifas']);
+    Route::get('/db', [DatabaseController::class, 'index']);
+    Route::get('/db/bajarInformacion/', [DatabaseController::class, 'bajarInformacion']);
 
     Route::post('/eventos/agregarZona/', [EventoController::class, 'agregarZona']);
     Route::post('/cargos/agregarTarifa/', [CargoController::class, 'agregarTarifa']);
