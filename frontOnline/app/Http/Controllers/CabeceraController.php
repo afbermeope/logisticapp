@@ -400,7 +400,7 @@ class CabeceraController extends Controller
 
                     // Crea un objeto personalizado con los datos de la fila
                     $objeto = new \stdClass();
-                    $objeto->cedula = $datos[0]; // Cedula
+                    $objeto->cedula = str_pad($datos[0], 10, '0', STR_PAD_LEFT); // Cedula
                     $objeto->nombre = $datos[1]; // Nombre completo
                     $objeto->telefono = $datos[2]; // Teléfono
                     $objeto->evento = $datos[3]; // Evento
@@ -516,7 +516,7 @@ class CabeceraController extends Controller
                     if (!$persona) {
                         $nuevaPersona = Persona::create([
                             'nombre' => $objeto->nombre,
-                            'cedula' => str_pad($objeto->cedula, 10, '0', STR_PAD_LEFT),
+                            'cedula' => $objeto->cedula,
                             'telefono' => $objeto->telefono,
                             'estado' => 'A'
                         ]);

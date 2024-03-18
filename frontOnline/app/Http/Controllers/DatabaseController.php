@@ -11,6 +11,7 @@ use App\Models\DetalleTurno;
 use App\Models\Movimiento;
 use App\Models\Elemento;
 use App\Models\Tarifa;
+use App\Models\Alimento;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -59,6 +60,7 @@ class DatabaseController extends Controller
         // Verifica si la solicitud fue exitosa (código de estado 200)
         if ($response->successful()) {
             // Obtén los datos de la respuesta en formato JSON
+            
             $datos = $response->json();
 
             // Procesa los datos obtenidos de la API
@@ -73,8 +75,34 @@ class DatabaseController extends Controller
 
     public function subirInformacion(){
     
+
+
         $eventos = Evento::all();
-        return response()->json($eventos);
+        $zonas = Zona::all();
+        $personas = Persona::all();
+        $cargos = Cargo::all();
+        $tarifas = Tarifa::all();
+        $cabeceras = Cabecera::all();
+        $detalleTurnos = DetalleTurno::all();
+        $movimientos = Movimiento::all();
+        $elementos = Elemento::all();
+        $alimentos = Alimento::all();
+
+        $data = [
+            'eventos' => $eventos,
+            'zonas' => $zonas,
+            'personas' => $personas,
+            'cargos' => $cargos,
+            'tarifas' => $tarifas,
+            'cabeceras' => $cabeceras,
+            'eventos' => $eventos,
+            'eventos' => $eventos,
+            'eventos' => $eventos,
+            'eventos' => $eventos,
+            'eventos' => $eventos,
+        ];
+
+        return response()->json($data);
     }
 
 }
