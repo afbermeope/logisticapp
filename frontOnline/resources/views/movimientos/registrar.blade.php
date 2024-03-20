@@ -167,9 +167,9 @@
             if(response == "ok"){
                 alert("Bienvenido");
                 document.getElementById('codigoBarrasInput').value = "";
-                limpiarCacheYRecargar()
+                recargar()
             }else{
-              limpiarCacheYRecargar()
+              recargar()
             }
         },
       });
@@ -191,6 +191,12 @@
 }
 
 </script>
-
+<script>
+  function recargar() {
+    // Limpiar la caché del navegador
+    document.getElementById("codigoBarrasInput").value = "";
+    // Recargar la página
+    location.reload(true); // El parámetro true forza la recarga de la página desde el servidor, evitando el uso de la caché del navegador
+}
 </body>
 </html>
