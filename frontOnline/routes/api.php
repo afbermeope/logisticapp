@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/db/subirInformacion/', [DatabaseController::class, 'subirInformacion']);
+Route::post('/db/alimentarServidor/', [DatabaseController::class, 'alimentarServidor']);

@@ -105,7 +105,7 @@
     // Verificar si el usuario hizo clic en "Aceptar"
     if (respuesta) {
       $.ajax({
-          url: "{{URL::to('/db/subirInformacion/')}}"+"/"+cargo_id,
+          url: "{{URL::to('/db/enviarInformacionServer/')}}",
           type:"GET",
           success:function(response){
               if(response) {  

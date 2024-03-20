@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\EventoController;
@@ -55,6 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/cargo/getTarifas/{cargo_id}', [CargoController::class, 'getTarifas']);
     Route::get('/db', [DatabaseController::class, 'index']);
     Route::get('/db/bajarInformacion/', [DatabaseController::class, 'bajarInformacion']);
+    Route::get('/db/enviarInformacionServer/', [DatabaseController::class, 'enviarInformacionServer']);
 
     Route::post('/eventos/agregarZona/', [EventoController::class, 'agregarZona']);
     Route::post('/cargos/agregarTarifa/', [CargoController::class, 'agregarTarifa']);
