@@ -198,5 +198,7 @@
     // Recargar la página
     location.reload(true); // El parámetro true forza la recarga de la página desde el servidor, evitando el uso de la caché del navegador
 }
+</script>
+
 </body>
 </html>
