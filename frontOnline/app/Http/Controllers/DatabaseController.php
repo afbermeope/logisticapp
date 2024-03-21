@@ -60,7 +60,7 @@ class DatabaseController extends Controller
     public function bajarInformacion(){
         // Realiza una solicitud GET a la API
         $response = Http::get('https://miarmadillo.com/public/api/db/obtenerInformacion');
-
+        
         if ($response->successful()) {
             try {
                 //code...
