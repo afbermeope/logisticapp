@@ -278,32 +278,44 @@ class DatabaseController extends Controller
     }
 
 
-    public function enviarInformacionServer(){
-
-        
-        $datos = $this->obtenerInformacion()->getContent(); // getContent() obtiene el contenido de la respuesta
-        // Encabezados personalizados que deseas enviar en la solicitud POST
+    public function enviarInformacionServer() {
+        // Obtener los datos en el formato requerido por el endpoint
+        $datos = [
+            'data' => [
+                'eventos' => Evento::all(),
+                'zonas' => Zona::all(),
+                'personas' => Persona::all(),
+                'cargos' => Cargo::all(),
+                'tarifas' => Tarifa::all(),
+                'cabeceras' => Cabecera::all(),
+                'detalleTurnos' => DetalleTurno::all(),
+                'movimientos' => Movimiento::all(),
+                'elementos' => Elemento::all(),
+                'alimentos' => Alimento::all()
+            ]
+        ];
+    
+        // Encabezados personalizados para la solicitud POST
         $encabezados = [
             'Content-Type' => 'application/json',
             'Accept' => '*/*'
         ];
-
-        // Enviar la solicitud POST al servidor remoto con los datos y encabezados
-        $response = Http::withHeaders($encabezados)->post('https://miarmadillo.com/public/api/db/alimentarServidor', [
-            'data' => $datos
-        ]);
+    
+        // Enviar la solicitud POST al servidor remoto
+        $response = Http::withHeaders($encabezados)->post('https://miarmadillo.com/public/api/db/alimentarServidor', $datos);
         
+        // Verificar si la solicitud fue exitosa
         if ($response->successful()) {
-            // El request fue exitoso (código de respuesta 2xx)
-            $data = $response->json(); // Obtener los datos de la respuesta como un array JSON
+            $data = $response->json();
             // Procesar los datos de la respuesta...
+            return $data;
         } else {
-            // El request no fue exitoso, manejar el error...
-            $statusCode = $response->status(); // Obtener el código de estado de la respuesta
-            $error = $response->body(); // Obtener el cuerpo de la respuesta en caso de error
+            $statusCode = $response->status();
+            $error = $response->body();
+            
+            return $error;
             // Manejar el error...
         }
-    
     }
 
     public function subirInfoAlserver(){

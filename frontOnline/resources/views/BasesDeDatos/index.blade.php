@@ -109,9 +109,7 @@
           type:"GET",
           success:function(response){
               if(response) {  
-
                 alert("subido correctamente");
-
               }
           },
       });
