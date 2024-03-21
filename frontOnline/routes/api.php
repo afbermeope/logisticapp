@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/db/obtenerInformacion/', [DatabaseController::class, 'obtenerInformacion']);
 Route::post('/db/alimentarServidor/', [DatabaseController::class, 'alimentarServidor']);
+Route::post('/db/subirInfoAlserver/', [DatabaseController::class, 'subirInfoAlserver']);

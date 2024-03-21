@@ -282,7 +282,6 @@ class DatabaseController extends Controller
 
         
         $datos = $this->obtenerInformacion()->getContent(); // getContent() obtiene el contenido de la respuesta
-
         // Encabezados personalizados que deseas enviar en la solicitud POST
         $encabezados = [
             'Content-Type' => 'application/json',
@@ -290,7 +289,7 @@ class DatabaseController extends Controller
         ];
 
         // Enviar la solicitud POST al servidor remoto con los datos y encabezados
-        $response = Http::withHeaders($encabezados)->post('https://miarmadillo.com/public/api/db/alimentarServidor/', [
+        $response = Http::withHeaders($encabezados)->post('https://miarmadillo.com/public/api/db/alimentarServidor', [
             'data' => $datos
         ]);
         
@@ -307,6 +306,12 @@ class DatabaseController extends Controller
     
     }
 
+    public function subirInfoAlserver(){
+        return response()->json("hey");
+    }
+
+
+    
 
     public function alimentarServidor(Request $request){
 
