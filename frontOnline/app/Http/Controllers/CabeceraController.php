@@ -510,7 +510,6 @@ class CabeceraController extends Controller
                     }
 
                     $persona = Persona::where('cedula', $objeto->cedula)
-                    ->where('nombre', $objeto->nombre)
                     ->first();    
 
                     if (!$persona) {
@@ -534,7 +533,6 @@ class CabeceraController extends Controller
                         ->join('tarifas as t', 'cabeceras.tarifa_id', '=', 't.id')
                         ->where('e.nombre', $objeto->evento)
                         ->where('z.nombre', $objeto->zona)
-                        ->where('p.nombre', $objeto->nombre)
                         ->where('p.cedula', $objeto->cedula)
                         ->where('ca.nombre', $objeto->cargo)
                         ->where('t.valor', $objeto->turno)
