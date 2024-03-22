@@ -412,6 +412,7 @@ class CabeceraController extends Controller
                     $objeto->cargo = $datos[9]; // Cargo
                     $objeto->checkin = $datos[10]; // Checkin
                     
+                    // dd( $objeto->fecha_inicio);
 
                     //Crear evento
                     //Validamos si no existe ese evento
@@ -543,7 +544,6 @@ class CabeceraController extends Controller
                     if (!$primerResultado) {
                         //TODO: esto puede hacerse mejor pero estoy mamao
                         $p= Persona::where('cedula', $objeto->cedula)
-                        ->where('nombre', $objeto->nombre)
                         ->first();    
 
                         $z = Zona::where('nombre', $objeto->zona)
@@ -573,32 +573,31 @@ class CabeceraController extends Controller
                             "estado" => "A",
                         ]);
 
-                        if($objeto->checkin == 'si'){
+                        if($objeto->checkin == 'SI'){
                             //si no crearlo
-                            
-                            try {
-                                $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
-                                $fechaServidor = Carbon::parse($fechaServidor);
-                                $fechaInicioEvento = Carbon::parse($cabecera->evento->fecha_inicio);
-                                $diasTranscurridos = $fechaInicioEvento->diffInDays($fechaServidor)+1;
-                                
-                                $detalleTurno = DetalleTurno::create([
-                                    'estado' => 'A',
-                                    'cabecera_id' => $cabecera->id,
-                                    'numero_dia' => $diasTranscurridos
-                                ]);
 
-                                //Crear primer movimiento
-                                $movimiento = Movimiento::create([
-                                    "descripcion" => 'checkin',
-                                    "estado" => 'A',
-                                    "detalle_turno_id" => $detalleTurno->id,
-                                ]);
-                            } catch (\Throwable $th) {
-                                dd($th);
-                            }
+                            $fechaInicioEvento = Carbon::parse($cabecera->evento->fecha_inicio);
+                            $fechaFinEvento = Carbon::parse($cabecera->evento->fecha_fin);
+                            $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
+                            // $fechaServidor = Carbon::parse("2024/03/16");
+                            $fechaServidor = Carbon::parse($fechaServidor);
                             
+                            $diasTranscurridos = $fechaInicioEvento->diffInDays($fechaServidor)+1;
+                            $detalleTurno = DetalleTurno::create([
+                                'estado' => 'A',
+                                'cabecera_id' => $cabecera->id,
+                                'numero_dia' => $diasTranscurridos
+                            ]);
+
+                            //Crear primer movimiento
+                            $movimiento = Movimiento::create([
+                                "descripcion" => 'checkin',
+                                "estado" => 'A',
+                                "detalle_turno_id" => $detalleTurno->id,
+                            ]);
+                    
                         }
+                        
                     } 
                     // Agrega el objeto al arreglo
                     $objetos[] = $objeto;

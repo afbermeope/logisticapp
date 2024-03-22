@@ -55,7 +55,7 @@
                                             <td>{{ $movimiento->created_at ?? '' }}</td>
                                             <td>{{ $movimiento->detalleTurno->numero_dia ?? '' }}</td>
                                             <td>{{ $movimiento->descripcion ?? '' }}</td>
-                                            <td>{{ $movimiento->descripcion == 'checkout' ? $movimiento->detalleturno->cabecera->tarifa->valor : '' }}</td>
+                                            <td>{{ $movimiento->descripcion == 'checkout' ? $movimiento->detalleturno->cabecera->tarifa->valor ?? '' : '' }}</td>
                                             <td>
                                                 <ul>
                                                     @foreach ($movimiento->elementos as $elemento)

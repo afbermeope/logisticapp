@@ -55,7 +55,7 @@
                                             <td>{{ $cabecera->zona->evento->nombre ?? '' }}</td>
                                             <td>{{ $cabecera->zona->nombre ?? '' }}</td>
                                             <td>{{ $cabecera->tarifa->valor ?? '' }}</td>
-                                            <td>{{ $cabecera->tarifa->valor * count($cabecera->detalleturnos) ?? '' }}</td>
+                                            <td>{{ $cabecera->tarifa->valor ?? 0 * count($cabecera->detalleturnos) ?? '' }}</td>
                                             <td>{{ $cabecera->horario ?? '' }}</td>
                                             <td>{{ $cabecera->tarifa->cargo->nombre ?? '' }}</td>
                                             <td>
