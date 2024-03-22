@@ -410,8 +410,8 @@ class CabeceraController extends Controller
                     $objeto->turno = $datos[7]; // Turno
                     $objeto->horario = $datos[8]; // Horario
                     $objeto->cargo = $datos[9]; // Cargo
+                    $objeto->checkin = $datos[10]; // Checkin
                     
-                    // dd( $objeto->fecha_inicio);
 
                     //Crear evento
                     //Validamos si no existe ese evento
@@ -574,6 +574,33 @@ class CabeceraController extends Controller
                             "cantidad_horas" => '1',
                             "estado" => "A",
                         ]);
+
+                        if($objeto->checkin == 'si'){
+                            //si no crearlo
+                            
+                            try {
+                                $fechaServidor = Carbon::now('America/Bogota')->toDateString(); // Obtén la fecha actual del servidor y ajusta la zona horaria
+                                $fechaServidor = Carbon::parse($fechaServidor);
+                                $fechaInicioEvento = Carbon::parse($cabecera->evento->fecha_inicio);
+                                $diasTranscurridos = $fechaInicioEvento->diffInDays($fechaServidor)+1;
+                                
+                                $detalleTurno = DetalleTurno::create([
+                                    'estado' => 'A',
+                                    'cabecera_id' => $cabecera->id,
+                                    'numero_dia' => $diasTranscurridos
+                                ]);
+
+                                //Crear primer movimiento
+                                $movimiento = Movimiento::create([
+                                    "descripcion" => 'checkin',
+                                    "estado" => 'A',
+                                    "detalle_turno_id" => $detalleTurno->id,
+                                ]);
+                            } catch (\Throwable $th) {
+                                dd($th);
+                            }
+                            
+                        }
                     } 
                     // Agrega el objeto al arreglo
                     $objetos[] = $objeto;
